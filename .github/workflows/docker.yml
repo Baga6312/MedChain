@@ -23,4 +23,5 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/medchain-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/medchain-backend:1.0.${{ github.run_number }}
             ${{ secrets.DOCKERHUB_USERNAME }}/medchain-backend:${{ github.sha }}
