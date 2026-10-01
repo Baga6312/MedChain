@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"inverse-surface":"#213145","surface-container-highest":"#d3e4fe","surface-dim":"#cbdbf5","on-primary-fixed":"#001f2a","surface-container-lowest":"#ffffff","background":"#f8f9ff","on-secondary-fixed-variant":"#004d62","outline":"#72787c","on-tertiary":"#ffffff","on-primary":"#ffffff","surface-tint":"#426373","error":"#ba1a1a","inverse-on-surface":"#eaf1ff","on-tertiary-container":"#00a7c3","primary":"#001e2a","on-error":"#ffffff","on-secondary-container":"#00647d","surface-container-low":"#eff4ff","on-secondary":"#ffffff","outline-variant":"#c1c7cc","on-surface":"#0b1c30","on-background":"#0b1c30","error-container":"#ffdad6","tertiary":"#001f26","on-tertiary-fixed-variant":"#004e5c","primary-fixed":"#c5e8fb","primary-fixed-dim":"#a9cbde","on-primary-container":"#7b9daf","on-tertiary-fixed":"#001f26","secondary-container":"#8fdfff","surface-container-high":"#dce9ff","tertiary-fixed":"#acedff","on-error-container":"#93000a","surface-variant":"#d3e4fe","on-surface-variant":"#42484b","on-secondary-fixed":"#001f29","inverse-primary":"#a9cbde","surface-container":"#e5eeff","on-primary-fixed-variant":"#294b5b","secondary-fixed-dim":"#81d1f0","surface":"#f8f9ff","secondary":"#006781","tertiary-fixed-dim":"#4cd7f6","surface-bright":"#f8f9ff","tertiary-container":"#003640","primary-container":"#0f3443","secondary-fixed":"#b9eaff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"0.75rem","gutter-desktop":"1.5rem","margin-desktop":"2rem","margin":"1rem","space-xs":"0.25rem","space-lg":"1.25rem","gutter":"1rem","space-sm":"0.5rem","margin-tablet":"1.5rem","space-xl":"2rem"},"fontFamily":{"code-sm":["JetBrains Mono"],"body-sm":["Inter"],"body-md":["Inter"],"label-sm":["Inter"],"headline-lg":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"body-lg":["Inter"],"headline-sm":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-md":["Inter"]},"fontSize":{"code-sm":["12px",{"lineHeight":"16px","letterSpacing":"0em","fontWeight":"500"}],"body-sm":["13px",{"lineHeight":"18px","letterSpacing":"0.005em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.03em","fontWeight":"500"}],"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-xl":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["15px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"400"}],"headline-sm":["16px",{"lineHeight":"24px","letterSpacing":"0em","fontWeight":"600"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container-lowest flex flex-col z-50 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="p-space-lg flex flex-col gap-space-sm bg-surface-container-low"><div class="flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Brand logo. - Primary color: #0f3443
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W-NyGgYCxb_-Fk0sSQ70RWT_KKSPxWeGypUMskjpAiWE3tPOYJFOsbE0pJBE57s9uYEHhEXzQC6noGu_BUDjLdHw4yq_hTtICFMIncU8S-I5Va1Bo-Wk3X0XM26XXjD3b1xUtK4UihSMuESa5Oh-8PaA6LlUU2cX7J077flDJqpDJj7fQ03BTZWNUR2cxPtc25MEqrOcS2zCWINM58iCSaGFOpvN0HzgLTuqmhDN6VPfpAEJr6CvY"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-none">MedChain</span><span class="font-label-sm text-label-sm text-secondary tracking-wider font-semibold uppercase mt-0.5">Core Health</span></div></div><span class="bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm px-2 py-0.5 rounded-lg font-semibold">Praticien</span></div><div class="mt-space-sm p-space-sm rounded-xl bg-surface-container-lowest flex items-center gap-space-sm"><img alt="Profile" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UwrwVc8Z3L685Q5PQyKexP5d2XdYxsHUW6wLIcYHnGZ0wyD_l9fLchG39dvvyAznvujSH8pi92IXszmpmUzt-Go53TJcuQ2yE5sQr7v5-vsBVzDilWTYyWQfE9Y_uVcbo2XrKN3xIl5N_yuM5KXkLZNp5Yp-I0DdxrDTrD4hQq94un1Fp9BYzFA-aLq183pfgt2pXyBGspbvkhjGserbPqofareBY033YqhLt4Y79AQfvCg29n5j6m"/><div class="flex flex-col min-w-0 flex-1"><div class="flex items-center justify-between gap-1"><span class="font-headline-sm text-body-md text-on-surface font-semibold truncate">Dr. Priya Patel</span><span class="w-2 h-2 rounded-full bg-secondary shrink-0" title="Session chiffrée active"></span></div><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Cardiologie Clinique</span><div class="flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[13px] text-secondary">lock</span><span class="font-code-sm text-code-sm text-secondary font-medium tracking-tight">FIDO2 #9B42</span></div></div></div></div><nav class="flex-1 px-space-md py-space-md flex flex-col gap-1 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary font-semibold rounded-lg"><div class="px-space-sm pb-1 pt-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Espace Clinique</span></div><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-colors bg-primary-container text-on-primary font-semibold rounded-lg" data-path="tableau-de-bord" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body-md text-body-md flex-1">Tableau de bord</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="patients-autorises" href="#"><span class="material-symbols-outlined text-[20px]">supervised_user_circle</span><span class="font-body-md text-body-md flex-1">Patients autorisés</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="rendez-vous" href="#"><span class="material-symbols-outlined text-[20px]">calendar_month</span><span class="font-body-md text-body-md flex-1">Rendez-vous</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="observations-medicales" href="#"><span class="material-symbols-outlined text-[20px]">clinical_notes</span><span class="font-body-md text-body-md flex-1">Observations</span></a><div class="px-space-sm pb-1 pt-space-md"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Traçabilité &amp; Sécurité</span></div><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="historique-des-acces" href="#"><span class="material-symbols-outlined text-[20px]">shield_with_heart</span><span class="font-body-md text-body-md flex-1">Historique des accès</span></a></nav><div class="p-space-md bg-surface-container-low flex flex-col gap-space-sm"><div class="p-space-sm rounded-lg bg-surface-container-lowest flex items-center justify-between"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[18px]">verified_user</span><div class="flex flex-col"><span class="font-label-sm text-label-sm font-semibold text-on-surface">HDS &amp; RGPD</span><span class="font-code-sm text-code-sm text-on-surface-variant">Sécurité Certifiée</span></div></div><span class="w-2 h-2 rounded-full bg-secondary"></span></div><button class="w-full flex items-center justify-center gap-2 py-2 px-space-sm rounded-lg bg-surface-container text-on-surface hover:bg-error-container hover:text-on-error-container transition-colors font-body-sm text-body-sm font-medium" type="button"><span class="material-symbols-outlined text-[18px]">logout</span>Déconnexion sécurisée</button></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 flex items-center justify-between px-gutter-desktop shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-md max-w-lg w-full"><img alt="Brand logo. - Primary color: #0f3443
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W-NyGgYCxb_-Fk0sSQ70RWT_KKSPxWeGypUMskjpAiWE3tPOYJFOsbE0pJBE57s9uYEHhEXzQC6noGu_BUDjLdHw4yq_hTtICFMIncU8S-I5Va1Bo-Wk3X0XM26XXjD3b1xUtK4UihSMuESa5Oh-8PaA6LlUU2cX7J077flDJqpDJj7fQ03BTZWNUR2cxPtc25MEqrOcS2zCWINM58iCSaGFOpvN0HzgLTuqmhDN6VPfpAEJr6CvY"/><div class="flex items-center w-full px-space-sm py-1.5 rounded-lg bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><span class="material-symbols-outlined text-outline text-[20px] mr-2">search</span><input class="w-full bg-transparent border-none outline-none font-body-sm text-body-sm text-on-surface placeholder:text-outline" placeholder="Rechercher un dossier, IPP ou patient autorisé..." type="search"/></div></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-2 px-space-sm py-1 rounded-lg bg-surface-container-lowest"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Ledger Sync: <span class="font-code-sm text-code-sm text-secondary font-semibold">Bloc #1,842,901</span></span></div><div class="flex items-center gap-1.5 px-space-sm py-1 rounded-lg bg-secondary-container/30 text-on-secondary-container"><span class="material-symbols-outlined text-[16px]">key</span><span class="font-label-sm text-label-sm font-semibold">Consentement Valide</span></div><div class="relative flex items-center justify-center p-2 rounded-lg text-on-surface-variant hover:bg-surface-container cursor-pointer transition-colors"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-error text-on-error font-label-sm text-label-sm flex items-center justify-center font-bold">2</span></div><div class="h-6 w-px bg-outline-variant/30"></div><div class="flex items-center gap-space-sm pl-1"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UwrwVc8Z3L685Q5PQyKexP5d2XdYxsHUW6wLIcYHnGZ0wyD_l9fLchG39dvvyAznvujSH8pi92IXszmpmUzt-Go53TJcuQ2yE5sQr7v5-vsBVzDilWTYyWQfE9Y_uVcbo2XrKN3xIl5N_yuM5KXkLZNp5Yp-I0DdxrDTrD4hQq94un1Fp9BYzFA-aLq183pfgt2pXyBGspbvkhjGserbPqofareBY033YqhLt4Y79AQfvCg29n5j6m"/><div class="hidden md:flex flex-col text-left"><span class="font-body-sm text-body-sm font-semibold text-on-surface leading-tight">Dr. Priya Patel</span><span class="font-label-sm text-label-sm text-outline">Session Habilitée</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-gutter-desktop pb-space-xl"><div class="flex flex-col w-full">
+<!-- Dynamic Notification / Security Audit Toast -->
+<div class="mb-space-lg flex items-center justify-between p-space-md rounded-lg bg-surface-container-low shadow-sm transition-all duration-300" id="security-alert-toast">
+<div class="flex items-center gap-space-md">
+<div class="w-8 h-8 rounded-lg bg-error flex items-center justify-center text-on-error shrink-0">
+<span class="material-symbols-outlined text-[18px]">gpp_bad</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-body-sm font-semibold text-error">Incident de sécurité prévenu</span>
+<span class="font-code-sm text-code-sm bg-error-container text-on-error-container px-1.5 py-0.5 rounded">ERR_CODE: SEC-403-REVOKED</span>
+<span class="font-code-sm text-code-sm text-outline">il y a 4 min</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tentative d'accès au dossier <span class="font-code-sm text-code-sm font-semibold text-on-surface">#PT-77301</span> rejetée : Mandat de consentement patient inexistant ou révoqué sur le ledger.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-sm py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors" onclick="document.getElementById('security-alert-toast').classList.add('hidden')">
+        Fermer
+      </button>
+</div>
+</div>
+<!-- Clinical Practitioner Header & Quick Bar -->
+<header class="flex flex-col gap-space-md mb-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Bonjour Dr. Patel</h1>
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-label-sm">RPPS: 10094821034</span>
+</div>
+<div class="flex flex-wrap items-center gap-x-space-md gap-y-1 text-on-surface-variant">
+<span class="font-body-md text-body-md">Service de Cardiologie • Hôpital Universitaire Saint-Louis</span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1.5 font-body-sm text-body-sm text-secondary">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+            Registre de consentements synchronisé (Dernier bloc vérifié il y a 2 min)
+          </span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="flex items-center gap-2 px-space-md py-2 rounded-lg bg-surface-container-lowest text-secondary font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm" onclick="document.getElementById('verify-consent-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+          Vérifier une autorisation
+        </button>
+<button class="flex items-center gap-2 px-space-md py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors shadow-sm" onclick="focusQuickObservation()">
+<span class="material-symbols-outlined text-[18px]">rate_review</span>
+          Saisir une observation d'urgence
+        </button>
+</div>
+</div>
+<!-- GDPR / Regulatory Compliance Strip -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex items-start gap-space-md">
+<div class="w-6 h-6 rounded bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">policy</span>
+</div>
+<div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+<strong class="font-semibold text-on-surface">Rappel déontologique :</strong> Vous accédez uniquement aux dossiers et segments explicitement consentis par vos patients. Toutes vos consultations et extractions font l'objet d'un horodatage cryptographique inaltérable conformément au RGPD &amp; HDS.
+        </p>
+<span class="font-code-sm text-code-sm text-secondary font-medium whitespace-nowrap bg-surface-container-lowest px-2 py-1 rounded">Audit-Trail Active #MD-PATEL-82</span>
+</div>
+</div>
+</header>
+<!-- Key Activity Metrics -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md mb-space-xl">
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Patients autorisés</span>
+<span class="w-7 h-7 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">people</span>
+</span>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-headline-xl font-bold text-primary">42</span>
+<span class="font-body-sm text-body-sm font-semibold text-secondary">+3 cette semaine</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Dossiers avec clé de déchiffrement active</p>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Rendez-vous du jour</span>
+<span class="w-7 h-7 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+</span>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-headline-xl font-bold text-primary">6</span>
+<span class="font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed font-semibold px-2 py-0.5 rounded">2 téléconsultations</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Prochain créneau à 14h30 : Marc Durand</p>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Observations émises</span>
+<span class="w-7 h-7 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+</span>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-headline-xl font-bold text-primary">14</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ce mois-ci</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">100% signées cryptographiquement</p>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Intégrité &amp; Conformité</span>
+<span class="w-7 h-7 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</span>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-headline-xl font-bold text-primary">0</span>
+<span class="font-body-sm text-body-sm font-semibold text-secondary">Incident détecté</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Consensus HDS vérifié à 100%</p>
+</div>
+</div>
+</section>
+<!-- Interactive Grid: Authorized Patients Table & Active Patient Sheet -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg">
+<!-- Main Table Container: Authorized Patients (Cols 1-8 on desktop) -->
+<section class="xl:col-span-8 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Table Control Toolbar -->
+<div class="p-space-md bg-surface-container-lowest flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center gap-space-sm flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none" id="patient-search-input" onkeyup="filterPatientsTable()" placeholder="Filtrer par nom, IPP ou type de suivi..." type="text"/>
+</div>
+<select class="py-1.5 px-space-sm rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none shrink-0" id="status-filter-select" onchange="filterPatientsTable()">
+<option value="all">Tous les statuts</option>
+<option value="actif">Consentement Actif</option>
+<option value="temporaire">Temporaire (&lt; 48h)</option>
+<option value="revoque">Non autorisé / Révoqué</option>
+</select>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors" onclick="downloadAuditProof()">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+              Export Registre
+            </button>
+</div>
+</div>
+<!-- Density-optimised Clinical Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left" id="patients-data-table">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-space-md">Patient &amp; Identifiant</th>
+<th class="py-3 px-space-md">Autorisation</th>
+<th class="py-3 px-space-md">Périmètre autorisé</th>
+<th class="py-3 px-space-md">Dernier accès</th>
+<th class="py-3 px-space-md">Statut</th>
+<th class="py-3 px-space-md text-right">Action médicale</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-sm text-body-sm">
+<!-- Row 1: Marc Durand -->
+<tr class="patient-table-row hover:bg-surface-container-low/70 transition-colors cursor-pointer bg-surface-container-lowest" data-query="marc durand pt-84920 cardio post-infarctus" data-status="actif" onclick="selectPatientRecord('Marc Durand', '#PT-84920', '54 ans (14/05/1970)', 'A+', 'Pénicilline (Choc anaphylactique 2018)', 'IDM antérieur 2021, Stent actif IVA, HTA contrôlée', 'Complet')">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-label-md shrink-0">MD</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-semibold text-primary">Marc Durand</span>
+<div class="flex items-center gap-1">
+<span class="font-code-sm text-code-sm text-on-surface-variant">#PT-84920</span>
+<span class="text-outline-variant">•</span>
+<span class="text-outline">54 ans, M</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface">12/03/2025</span>
+<span class="font-label-sm text-label-sm text-outline">Valable 1 an</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">monitor_heart</span>
+                    Complet : Cardio + Bio + Imagerie
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">
+<span class="font-code-sm text-code-sm">28/02/2025</span>
+<div class="font-label-sm text-label-sm text-outline">Dr. Priya Patel</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container text-secondary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    Consentement actif
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded bg-primary-container text-on-primary font-label-sm text-label-sm hover:bg-primary transition-colors">
+                      Dossier
+                    </button>
+<button class="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container" onclick="event.stopPropagation(); showAccessAuditModal('#PT-84920', 'Marc Durand')" title="Journal des transactions">
+<span class="material-symbols-outlined text-[18px]">history</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Éléonore Mercier -->
+<tr class="patient-table-row hover:bg-surface-container-low/70 transition-colors cursor-pointer bg-surface-container-lowest" data-query="eléonore mercier eleonore pt-39102 post-operatoire bio ecg" data-status="actif" onclick="selectPatientRecord('Éléonore Mercier', '#PT-39102', '62 ans (03/11/1962)', 'O+', 'Aucune allergie connue', 'Remplacement valvulaire aortique (TAVI 2024)', 'Partiel')">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center font-bold text-label-md shrink-0">EM</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-semibold text-primary">Éléonore Mercier</span>
+<div class="flex items-center gap-1">
+<span class="font-code-sm text-code-sm text-on-surface-variant">#PT-39102</span>
+<span class="text-outline-variant">•</span>
+<span class="text-outline">62 ans, F</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface">18/01/2025</span>
+<span class="font-label-sm text-label-sm text-outline">Valable 6 mois</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">labs</span>
+                    Biologie &amp; ECG Post-op
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">
+<span class="font-code-sm text-code-sm">14/02/2025</span>
+<div class="font-label-sm text-label-sm text-outline">Dr. Priya Patel</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container text-secondary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    Consentement actif
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors">
+                      Dossier
+                    </button>
+<button class="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container" onclick="event.stopPropagation(); showAccessAuditModal('#PT-39102', 'Éléonore Mercier')" title="Journal des transactions">
+<span class="material-symbols-outlined text-[18px]">history</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Thomas Leroy -->
+<tr class="patient-table-row hover:bg-surface-container-low/70 transition-colors cursor-pointer bg-surface-container-lowest" data-query="thomas leroy pt-55214 annuel restreint" data-status="actif" onclick="selectPatientRecord('Thomas Leroy', '#PT-55214', '39 ans (22/08/1985)', 'B+', 'Sulfamides', 'Suivi arythmie bénigne, bilan de contrôle', 'Restreint')">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center font-bold text-label-md shrink-0">TL</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-semibold text-primary">Thomas Leroy</span>
+<div class="flex items-center gap-1">
+<span class="font-code-sm text-code-sm text-on-surface-variant">#PT-55214</span>
+<span class="text-outline-variant">•</span>
+<span class="text-outline">39 ans, M</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface">05/02/2025</span>
+<span class="font-label-sm text-label-sm text-outline">Valable 1 an</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">lock_open</span>
+                    Restreint : Consultations seules
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">
+<span class="font-code-sm text-code-sm">05/02/2025</span>
+<div class="font-label-sm text-label-sm text-outline">Dr. J. Martin (Généraliste)</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container text-secondary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    Consentement actif
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors">
+                      Dossier
+                    </button>
+<button class="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container" onclick="event.stopPropagation(); showAccessAuditModal('#PT-55214', 'Thomas Leroy')" title="Journal des transactions">
+<span class="material-symbols-outlined text-[18px]">history</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Sarah Benali -->
+<tr class="patient-table-row hover:bg-surface-container-low/70 transition-colors cursor-pointer bg-surface-container-lowest" data-query="sarah benali pt-90431 bilan d effort temporaire" data-status="temporaire" onclick="selectPatientRecord('Sarah Benali', '#PT-90431', '47 ans (19/01/1978)', 'AB-', 'AINS (Ibuprofène)', 'Suspicion d\'angor d\'effort atypique', 'Temporaire')">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center font-bold text-label-md shrink-0">SB</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-semibold text-primary">Sarah Benali</span>
+<div class="flex items-center gap-1">
+<span class="font-code-sm text-code-sm text-on-surface-variant">#PT-90431</span>
+<span class="text-outline-variant">•</span>
+<span class="text-outline">47 ans, F</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface">11/03/2025</span>
+<span class="font-label-sm text-label-sm text-error font-semibold">Expire dans 48h</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">timer</span>
+                    Accès Ponctuel : Épreuve d'effort
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">
+<span class="font-code-sm text-code-sm">Hier (16:40)</span>
+<div class="font-label-sm text-label-sm text-outline">Dr. Priya Patel</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                    Mandat temporaire
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors">
+                      Dossier
+                    </button>
+<button class="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container" onclick="event.stopPropagation(); showAccessAuditModal('#PT-90431', 'Sarah Benali')" title="Journal des transactions">
+<span class="material-symbols-outlined text-[18px]">history</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Lucas Vasseur (Consentement Révoqué / 403 Flow) -->
+<tr class="patient-table-row bg-surface-container-low/40 hover:bg-error-container/20 transition-colors" data-query="lucas vasseur pt-11048 revoque non autorise 403" data-status="revoque">
+<td class="py-3.5 px-space-md opacity-75">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container text-outline flex items-center justify-center font-bold text-label-md shrink-0">LV</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-semibold text-on-surface">Lucas Vasseur</span>
+<div class="flex items-center gap-1">
+<span class="font-code-sm text-code-sm text-on-surface-variant">#PT-11048</span>
+<span class="text-outline-variant">•</span>
+<span class="text-outline">29 ans, M</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md opacity-75">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline">Révoqué le 24/02</span>
+<span class="font-label-sm text-label-sm text-error">Clé asymétrique invalidée</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md opacity-75">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-outline font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">block</span>
+                    Accès révoqué par le patient
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-outline">
+<span class="font-code-sm text-code-sm">10/01/2025</span>
+<div class="font-label-sm text-label-sm">Session expirée</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                    Non autorisé (403)
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="px-2.5 py-1 rounded bg-error text-on-error font-label-sm text-label-sm hover:opacity-90 transition-opacity" onclick="triggerAccessDeniedModal('Lucas Vasseur', '#PT-11048')">
+                    Consulter
+                  </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-space-sm bg-surface-container-low flex items-center justify-between font-label-sm text-label-sm text-outline">
+<span>Affichage de 5 patients sur 42 autorisés actifs</span>
+<span class="font-code-sm text-code-sm">Smart Contract: 0x82f...a194 | Consensus HDS 3/3</span>
+</div>
+</div>
+</section>
+<!-- Side Inspection View: Patient File under Active Consultation (Cols 9-12 on desktop) -->
+<aside class="xl:col-span-4 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Patient Header Strip -->
+<div class="p-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold text-secondary">Consultation active</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container-lowest text-primary px-2 py-0.5 rounded font-semibold" id="active-card-clearance">Dossier déchiffré</span>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<!-- Active Patient Profile Identity -->
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<h2 class="font-headline-md text-headline-md text-primary font-bold" id="active-patient-name">Marc Durand</h2>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-code-sm text-code-sm text-secondary font-semibold" id="active-patient-id">#PT-84920</span>
+<span class="text-outline-variant">•</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="active-patient-age">54 ans (14/05/1970)</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-outline">Groupe sanguin</span>
+<div class="font-headline-sm text-headline-sm font-bold text-primary" id="active-patient-blood">A+</div>
+</div>
+</div>
+<!-- Clinical Vitals & Critical Alerts -->
+<div class="flex flex-col gap-space-sm">
+<!-- Allergy Alert (High visibility) -->
+<div class="p-space-sm rounded-lg bg-error-container text-on-error-container flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5">warning</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">Allergie Majeure</span>
+<span class="font-body-sm text-body-sm font-medium" id="active-patient-allergies">Pénicilline (Choc anaphylactique 2018)</span>
+</div>
+</div>
+<!-- Medical History -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-0.5">
+<span class="font-label-sm text-label-sm uppercase font-semibold text-outline">Antécédents cardiovasculaires</span>
+<p class="font-body-sm text-body-sm text-on-surface" id="active-patient-antecedents">IDM antérieur 2021, Stent actif IVA, HTA contrôlée.</p>
+</div>
+</div>
+<!-- Authorized Medical Exams & Biomarkers -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold text-outline">Derniers examens autorisés</span>
+<span class="font-code-sm text-code-sm text-secondary">Hash SHA-256 certifié</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="p-space-sm rounded bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">ecg</span>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">ECG d'effort (12 dérivations)</span>
+<span class="font-label-sm text-label-sm text-outline">28/02/2025 • Charge max 150W</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-secondary px-2 py-0.5 rounded bg-surface-container-lowest">Normal</span>
+</div>
+<div class="p-space-sm rounded bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">science</span>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Bilan lipidique complet</span>
+<span class="font-label-sm text-label-sm text-outline">20/02/2025 • Labo Saint-Louis</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">LDL 1.4 g/L</span>
+<span class="font-label-sm text-label-sm text-error block">Cible &lt; 0.70</span>
+</div>
+</div>
+<div class="p-space-sm rounded bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">question_mark</span>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Échocardiographie Doppler</span>
+<span class="font-label-sm text-label-sm text-outline">15/01/2025 • FE 52%</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-secondary px-2 py-0.5 rounded bg-surface-container-lowest">Stable</span>
+</div>
+</div>
+</div>
+<!-- Quick Clinical Observation Field -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<label class="font-label-sm text-label-sm uppercase tracking-wider font-semibold text-outline" for="quick-observation-text">
+              Ajouter une observation médicale
+            </label>
+<textarea class="w-full p-space-sm rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none placeholder:text-outline resize-none" id="quick-observation-text" placeholder="Saisir les conclusions cliniques, ajustements thérapeutiques..." rows="3"></textarea>
+<div class="flex items-center justify-between mt-1">
+<span class="font-code-sm text-code-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">key</span>
+                Clé Ed25519 active
+              </span>
+<button class="flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors" onclick="commitMedicalObservation()">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+                Signer &amp; chiffrer
+              </button>
+</div>
+</div>
+<!-- Legal Disclaimer -->
+<div class="p-2 rounded bg-surface-container-low text-outline text-[11px] leading-relaxed">
+<strong class="font-semibold text-on-surface-variant">Mentions légales :</strong> Données médicales consultées sous mandat de soin direct. Les prédictions et alertes automatisées ne constituent en aucun cas un diagnostic médical. Seule l'évaluation clinique prévaut.
+          </div>
+</div>
+</div>
+</aside>
+</div>
+<!-- Modal: 403 Forbidden Access Simulation -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center p-gutter bg-primary/70 backdrop-blur-sm" id="access-denied-modal">
+<div class="max-w-md w-full rounded-xl bg-surface-container-lowest shadow-xl overflow-hidden flex flex-col">
+<div class="p-space-lg flex flex-col items-center text-center gap-space-sm bg-error-container text-on-error-container">
+<div class="w-12 h-12 rounded-full bg-error text-on-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">lock_reset</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-error-container">Accès Non Autorisé (403)</h3>
+<span class="font-code-sm text-code-sm bg-on-error-container/10 px-2 py-0.5 rounded font-mono">CRYPT_DENIED_REVOKED_CONSENT</span>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<p class="font-body-sm text-body-sm text-on-surface leading-normal">
+          Le dossier de <strong class="text-primary" id="modal-denied-patient-name">Lucas Vasseur</strong> (<span class="font-code-sm text-code-sm" id="modal-denied-patient-id">#PT-11048</span>) ne peut pas être déchiffré.
+        </p>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1 text-left">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-semibold text-outline">Statut de la clé :</span>
+<span class="font-code-sm text-code-sm text-error font-bold">RÉVOQUÉE</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-semibold text-outline">Horodatage révocation :</span>
+<span class="font-code-sm text-code-sm text-on-surface">24/02/2025 à 09:12:43 CET</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-semibold text-outline">Motif consigné :</span>
+<span class="font-body-sm text-body-sm text-on-surface">Retrait explicite par l'usager</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-left">
+          En application des articles L. 1111-7 et R. 1110-1 du Code de la Santé Publique, la consultation de ces données requiert une nouvelle demande de mandat envoyée sur le terminal du patient.
+        </p>
+<div class="flex items-center justify-end gap-space-sm pt-space-xs">
+<button class="px-space-md py-2 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors" onclick="document.getElementById('access-denied-modal').classList.add('hidden')">
+            Fermer
+          </button>
+<button class="flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors" onclick="requestNewPatientConsent()">
+<span class="material-symbols-outlined text-[16px]">send_time_extension</span>
+            Demander le renouvellement
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal: Verification / Quick Verification -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center p-gutter bg-primary/70 backdrop-blur-sm" id="verify-consent-modal">
+<div class="max-w-lg w-full rounded-xl bg-surface-container-lowest shadow-xl overflow-hidden flex flex-col">
+<div class="p-space-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-primary">Vérification d'Autorisation Patient</h3>
+</div>
+<button class="text-outline hover:text-on-surface" onclick="document.getElementById('verify-consent-modal').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Entrez l'Identifiant Patient Partagé (IPP) ou le jeton de mandat éphémère remis par le patient pour inspecter les autorisations actives sur le registre.
+        </p>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm uppercase font-semibold text-outline">Identifiant cryptographique ou IPP</label>
+<div class="flex gap-2">
+<input class="flex-1 px-space-md py-2 rounded-lg bg-surface-container-low text-on-surface font-code-sm text-code-sm focus:outline-none" id="verify-input-id" placeholder="Ex: PT-84920 ou 0x93ab..." type="text"/>
+<button class="px-space-md py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors shrink-0" onclick="simulateVerificationCheck()">
+              Interroger le registre
+            </button>
+</div>
+</div>
+<div class="hidden p-space-md rounded-lg bg-surface-container flex flex-col gap-2" id="verify-result-box">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-sm font-semibold text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+              Mandat cryptographique actif
+            </span>
+<span class="font-code-sm text-code-sm text-outline">Bloc #1,842,898</span>
+</div>
+<div class="text-body-sm text-on-surface flex flex-col gap-0.5">
+<span><strong>Détenteur :</strong> Marc Durand (#PT-84920)</span>
+<span><strong>Champs déchiffrables :</strong> Électrocardiogrammes, Constantes, Biologie</span>
+<span><strong>Expiration :</strong> 12/03/2026 (Mandat annuel pérenne)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal: Access History / Transaction Ledger -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center p-gutter bg-primary/70 backdrop-blur-sm" id="access-history-modal">
+<div class="max-w-xl w-full rounded-xl bg-surface-container-lowest shadow-xl overflow-hidden flex flex-col">
+<div class="p-space-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm font-bold text-primary">Journal d'audit du patient</h3>
+<span class="font-code-sm text-code-sm text-secondary" id="audit-modal-subtitle">#PT-84920 • Marc Durand</span>
+</div>
+<button class="text-outline hover:text-on-surface" onclick="document.getElementById('access-history-modal').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-space-lg flex flex-col gap-space-sm max-h-[60vh] overflow-y-auto">
+<div class="p-space-sm rounded bg-surface-container-low flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-semibold text-on-surface">Lecture ECG d'effort</span>
+<span class="font-code-sm text-code-sm text-outline">Par Dr. Priya Patel (RPPS: 10094821034)</span>
+</div>
+<div class="text-right">
+<span class="font-code-sm text-code-sm text-on-surface-variant block">28/02/2025 14:32</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Preuve ZK #8892</span>
+</div>
+</div>
+<div class="p-space-sm rounded bg-surface-container-low flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-semibold text-on-surface">Transmission Résultats Biologiques</span>
+<span class="font-code-sm text-code-sm text-outline">Labo Central Saint-Louis</span>
+</div>
+<div class="text-right">
+<span class="font-code-sm text-code-sm text-on-surface-variant block">20/02/2025 08:15</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Preuve ZK #7104</span>
+</div>
+</div>
+<div class="p-space-sm rounded bg-surface-container-low flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-semibold text-on-surface">Renouvellement du consentement</span>
+<span class="font-code-sm text-code-sm text-outline">Signé par le patient (App MedChain)</span>
+</div>
+<div class="text-right">
+<span class="font-code-sm text-code-sm text-on-surface-variant block">12/01/2025 19:40</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Preuve ZK #1093</span>
+</div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low flex items-center justify-between font-label-sm text-label-sm text-outline">
+<span>Conforme Art. 30 RGPD (Registre des activités de traitement)</span>
+<button class="px-space-md py-1.5 rounded bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors" onclick="document.getElementById('access-history-modal').classList.add('hidden')">
+          Fermer
+        </button>
+</div>
+</div>
+</div>
+<script>
+    function filterPatientsTable() {
+      const searchVal = document.getElementById('patient-search-input').value.toLowerCase();
+      const statusVal = document.getElementById('status-filter-select').value;
+      const rows = document.querySelectorAll('.patient-table-row');
+
+      rows.forEach(row => {
+        const query = (row.getAttribute('data-query') || '').toLowerCase();
+        const status = row.getAttribute('data-status') || '';
+
+        const matchesQuery = !searchVal || query.includes(searchVal);
+        const matchesStatus = (statusVal === 'all') || (status === statusVal);
+
+        if (matchesQuery && matchesStatus) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function selectPatientRecord(name, id, age, blood, allergies, antecedents, clearance) {
+      document.getElementById('active-patient-name').textContent = name;
+      document.getElementById('active-patient-id').textContent = id;
+      document.getElementById('active-patient-age').textContent = age;
+      document.getElementById('active-patient-blood').textContent = blood;
+      document.getElementById('active-patient-allergies').textContent = allergies;
+      document.getElementById('active-patient-antecedents').textContent = antecedents;
+      document.getElementById('active-card-clearance').textContent = 'Mandat : ' + clearance;
+    }
+
+    function triggerAccessDeniedModal(name, id) {
+      document.getElementById('modal-denied-patient-name').textContent = name;
+      document.getElementById('modal-denied-patient-id').textContent = id;
+      document.getElementById('access-denied-modal').classList.remove('hidden');
+    }
+
+    function requestNewPatientConsent() {
+      alert("Notification d'invitation sécurisée transmise au patient via l'application MedChain Patient. En attente de signature cryptographique.");
+      document.getElementById('access-denied-modal').classList.add('hidden');
+    }
+
+    function focusQuickObservation() {
+      const field = document.getElementById('quick-observation-text');
+      if (field) {
+        field.focus();
+        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function commitMedicalObservation() {
+      const field = document.getElementById('quick-observation-text');
+      if (!field.value.trim()) {
+        alert("Veuillez saisir une observation avant de signer.");
+        return;
+      }
+      alert("Observation chiffrée avec succès avec votre clé RPPS. Mandat horodaté sur le registre MedChain.");
+      field.value = "";
+    }
+
+    function downloadAuditProof() {
+      alert("Exportation sécurisée du registre d'accès autorisés pour la session courante (Fichier crypté .medchain.audit).");
+    }
+
+    function showAccessAuditModal(id, name) {
+      document.getElementById('audit-modal-subtitle').textContent = id + ' • ' + name;
+      document.getElementById('access-history-modal').classList.remove('hidden');
+    }
+
+    function simulateVerificationCheck() {
+      const input = document.getElementById('verify-input-id');
+      if (!input.value.trim()) {
+        alert("Veuillez entrer un identifiant patient ou un hash.");
+        return;
+      }
+      document.getElementById('verify-result-box').classList.remove('hidden');
+    }
+  </script>
+</div></main></div></body></html>
