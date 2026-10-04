@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     environment:
       DJANGO_SECRET_KEY: django-dev-only-change-me
-      DJANGO_DEBUG: "1"
+      DJANGO_DEBUG: "0"
       DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,backend
       DB_NAME: medchain
       DB_USER: shops

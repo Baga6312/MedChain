@@ -2,6 +2,10 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+
+handler500 = "config.error_views.json_server_error"
+handler404 = "config.error_views.json_not_found"
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("healthcare.urls")),
