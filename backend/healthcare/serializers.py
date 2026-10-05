@@ -13,13 +13,18 @@ class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = ["id", "name", "birth_date", "phone"]
+        extra_kwargs = {
+            "id": {"read_only": False, "required": True},
+            "name": {"required": True},
+            "birth_date": {"required": True, "allow_null": True},
+            "phone": {"required": True},
+        }
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ["id", "patient", "doctor", "date", "notes", "status"]
-        read_only_fields = ["status"]
         extra_kwargs = {
             "notes": {"required": True, "allow_blank": False},
         }

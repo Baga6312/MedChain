@@ -1,6 +1,7 @@
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
+from django.db.models import Q
 from .models import Appointment, Doctor, MedicalRecord, Patient
 from .serializers import AppointmentSerializer, DoctorSerializer, MedicalRecordSerializer, PatientSerializer
 
@@ -13,6 +14,98 @@ class DoctorViewSet(viewsets.ModelViewSet):
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
+
+    def list(self, request, *args, **kwargs):
+        if (request.query_params and request.body) or request.query_params or request.body :
+            return Response(
+                {"detail": "Error while processing the request."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return super().list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        if request.query_params or request.body:
+            return Response(
+                {"detail": "Error while processing the request."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return super().retrieve(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        if request.query_params or request.content_type != "application/json":
+            return Response(
+                {"detail": "Error while processing the request."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        d = serializer.validated_data
+
+        if Patient.objects.filter(
+            Q(pk=d["id"]) | Q(name=d["name"]) | Q(phone=d["phone"])
+        ).exists():
+            return Response(
+                {"detail": "A patient with this id, name or phone already exists."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        self.perform_create(serializer)
+        return Response(
+            {"detail": "Patient has been created successfully."},
+             status=status.HTTP_201_CREATED
+            )
+
+    def update(self, request, *args, **kwargs):
+        if request.query_params or request.content_type != "application/json":
+            return Response(
+                {"detail": "Error while processing the request."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        data = request.data
+        if not isinstance(data, dict) or "id" not in data:
+            return Response(
+                {"detail": "'id' is required in the body."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        instance = Patient.objects.filter(pk=data["id"]).first()
+        if instance is None:
+            return Response(
+                {"detail": "Patient not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        payload = {k: v for k, v in data.items() if k != "id"}
+        payload["id"] = instance.pk
+        serializer = self.get_serializer(instance, data=payload)
+        serializer.is_valid(raise_exception=True)
+        d = serializer.validated_data
+
+        if Patient.objects.filter(
+            Q(name=d["name"]) | Q(phone=d["phone"])
+        ).exclude(pk=instance.pk).exists():
+            return Response(
+                {"detail": "Another patient already has this name or phone."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        self.perform_update(serializer)
+        return Response({"detail": "Patient updated."}, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        if request.query_params or request.body:
+            return Response(
+                {"detail": "Error while processing the request."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        instance = Patient.objects.filter(pk=kwargs["pk"]).first()
+        if instance is None:
+            return Response(
+                {"detail": "Patient not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        self.perform_destroy(instance)
+        return Response({"detail": "patient has been deleted"}, status=status.HTTP_200_OK)
 
 
 
@@ -67,8 +160,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             )
         return super().retrieve(request, *args, **kwargs)
 
-# TODO : implement the validation thru the appointment id and updating the status of the appointment 
-# the id of the appointment should be passed for querying then the rest will be updated 
     def update(self, request, *args, **kwargs):
         if request.query_params or request.content_type != "application/json":
             return Response(
@@ -76,20 +167,38 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         data = request.data
-        if not isinstance(data, dict) or set(data.keys()) != {"status"}:
+        if not isinstance(data, dict) or "id" not in data:
             return Response(
-                {"detail": "Only 'status' is accepted."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        if data["status"] not in Appointment.Status.values:
-            return Response(
-                {"detail": f"Invalid status. Allowed: {list(Appointment.Status.values)}"},
+                {"detail": "'id' is required in the body."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        instance = self.get_object()
-        instance.status = data["status"]
-        instance.save(update_fields=["status"])
+        instance = Appointment.objects.filter(pk=data["id"]).first()
+        if instance is None:
+            return Response(
+                {"detail": "Appointment not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        payload = {k: v for k, v in data.items() if k != "id"}
+        serializer = self.get_serializer(instance, data=payload)
+        serializer.is_valid(raise_exception=True)
+
+        patient = serializer.validated_data["patient"]
+        doctor = serializer.validated_data["doctor"]
+        other_doctor = (
+            Appointment.objects.filter(patient=patient)
+            .exclude(doctor=doctor)
+            .exclude(pk=instance.pk)
+            .exists()
+        )
+        if other_doctor:
+            return Response(
+                {"detail": "This patient is already assigned to a different doctor."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        self.perform_update(serializer)
         return Response({"detail": "Appointment updated."}, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
