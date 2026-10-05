@@ -7,6 +7,11 @@ class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         fields = ["id", "name", "specialty"]
+        extra_kwargs = {
+            "id": {"read_only": False, "required": True},
+            "name": {"required": True},
+            "specialty": {"required": True},
+        }
 
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -35,3 +40,9 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
         model = MedicalRecord
         fields = ["id", "patient", "title", "content", "created_at", "updated_at"]
         read_only_fields = ["created_at", "updated_at"]
+        extra_kwargs = {
+            "id": {"read_only": False, "required": True},
+            "patient": {"required": True},
+            "title": {"required": True},
+            "content": {"required": True},
+        }
