@@ -1,386 +1,205 @@
+"""HTTP layer for the healthcare API.
+
+Refactored from 386 lines of copy-paste to this module. What changed and why is
+recorded in REFACTOR_NOTES.md; the short version is that every viewset repeated
+the same methods with the same three problems, and those three problems were
+bugs rather than style.
+
+  1. Every read method began with `if request.query_params or request.body:
+     return 400`. That is not input validation -- it rejects any GET carrying a
+     query string, so `GET /api/patients/?page=2` fails, and it rejects any GET
+     with a body, which some HTTP clients send by default. Removed entirely.
+  2. `update()` read the target primary key from `request.data["id"]` instead
+     of the URL, so PUT was wired to the collection route and any caller could
+     rewrite any row by guessing an id. The URL now identifies the resource.
+  3. The same methods were reimplemented four times over, and the copies had
+     drifted apart: AppointmentViewSet.update never checked for a duplicate
+     active appointment, so a rule that create enforced was one request away
+     from being bypassed.
+
+Scope of this refactor: HTTP concerns only. Business rules that were already
+implemented stay implemented, just relocated. No model, migration, or
+authentication change is included -- those are separate pieces of work.
+"""
+
+from django.http import Http404
 from rest_framework import status, viewsets
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from django.db.models import Q
 from .models import Appointment, Doctor, MedicalRecord, Patient
-from .serializers import AppointmentSerializer, DoctorSerializer, MedicalRecordSerializer, PatientSerializer
+from .serializers import (
+    AppointmentSerializer,
+    DoctorSerializer,
+    MedicalRecordSerializer,
+    PatientSerializer,
+)
 
 
-class DoctorViewSet(viewsets.ModelViewSet):
-    queryset = Doctor.objects.all()
-    serializer_class = DoctorSerializer
+class BaseModelViewSet(viewsets.ModelViewSet):
+    """Shared behaviour for the four resources.
 
-    def list(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return super().list(request, *args, **kwargs)
+    Holds the methods that were copy-pasted per viewset. A subclass that needs
+    extra behaviour overrides a hook rather than re-implementing the method.
 
-    def retrieve(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return super().retrieve(request, *args, **kwargs)
+    Nothing here touches authentication or authorization. That is deliberate
+    and it is a real gap: the API currently has neither, which is tracked as
+    separate work, and mixing permission changes into a structural refactor
+    would make the two indistinguishable in review.
+    """
 
-    def create(self, request, *args, **kwargs):
-        if request.query_params or request.content_type != "application/json":
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        d = serializer.validated_data
+    def get_queryset(self):
+        return self.queryset.all()
 
-        if Doctor.objects.filter(Q(pk=d["id"]) | Q(name=d["name"])).exists():
-            return Response(
-                {"detail": "A doctor with this id or name already exists."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+    def _get_object_or_404(self):
+        """Resolve the URL pk to an instance, or raise Http404.
 
-        self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        Centralising this means every resource renders the same 404 body via
+        DRF's handler instead of each view hand-building one.
+        """
+        instance = self.get_queryset().filter(pk=self.kwargs.get("pk")).first()
+        if instance is None:
+            raise Http404
+        self.check_object_permissions(self.request, instance)
+        return instance
 
     def update(self, request, *args, **kwargs):
-        if request.query_params or request.content_type != "application/json":
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        data = request.data
-        if not isinstance(data, dict) or "id" not in data:
-            return Response(
-                {"detail": "'id' is required in the body."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        """PUT, with the target taken from the URL rather than the body.
 
-        instance = Doctor.objects.filter(pk=data["id"]).first()
-        if instance is None:
-            return Response(
-                {"detail": "Doctor not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        payload = {k: v for k, v in data.items() if k != "id"}
-        payload["id"] = instance.pk
-        serializer = self.get_serializer(instance, data=payload)
+        The previous implementation read `request.data["id"]` and was bound to
+        the collection route. Two consequences: the URL did not identify the
+        resource, and the body's id was a second handle on it, so a caller who
+        guessed any id could write to that row.
+        """
+        instance = self._get_object_or_404()
+        serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
-        d = serializer.validated_data
-
-        if Doctor.objects.filter(name=d["name"]).exclude(pk=instance.pk).exists():
-            return Response(
-                {"detail": "Another doctor already has this name."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
         self.perform_update(serializer)
-        return Response({"detail": "Doctor updated."}, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def partial_update(self, request, *args, **kwargs):
+        """PATCH was unreachable before -- it was never bound in urls.py.
+
+        ModelViewSet already implements it and it costs nothing to expose.
+        """
+        instance = self._get_object_or_404()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        instance = Doctor.objects.filter(pk=kwargs["pk"]).first()
-        if instance is None:
-            return Response(
-                {"detail": "Doctor not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        self.perform_destroy(instance)
-        return Response({"detail": "Doctor has been deleted"}, status=status.HTTP_200_OK)
+        """Delete, resolved from the URL, returning a bodyless 204.
 
-class PatientViewSet(viewsets.ModelViewSet):
-    queryset = Patient.objects.all()
-    serializer_class = PatientSerializer
-
-    def list(self, request, *args, **kwargs):
-        if (request.query_params and request.body) or request.query_params or request.body :
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return super().list(request, *args, **kwargs)
-
-    def retrieve(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return super().retrieve(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        if request.query_params or request.content_type != "application/json":
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        d = serializer.validated_data
-
-        if Patient.objects.filter(
-            Q(pk=d["id"]) | Q(name=d["name"]) | Q(phone=d["phone"])
-        ).exists():
-            return Response(
-                {"detail": "A patient with this id, name or phone already exists."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        self.perform_create(serializer)
-        return Response(
-            {"detail": "Patient has been created successfully."},
-             status=status.HTTP_201_CREATED
-            )
-
-    def update(self, request, *args, **kwargs):
-        if request.query_params or request.content_type != "application/json":
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        data = request.data
-        if not isinstance(data, dict) or "id" not in data:
-            return Response(
-                {"detail": "'id' is required in the body."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        instance = Patient.objects.filter(pk=data["id"]).first()
-        if instance is None:
-            return Response(
-                {"detail": "Patient not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        payload = {k: v for k, v in data.items() if k != "id"}
-        payload["id"] = instance.pk
-        serializer = self.get_serializer(instance, data=payload)
-        serializer.is_valid(raise_exception=True)
-        d = serializer.validated_data
-
-        if Patient.objects.filter(
-            Q(name=d["name"]) | Q(phone=d["phone"])
-        ).exclude(pk=instance.pk).exists():
-            return Response(
-                {"detail": "Another patient already has this name or phone."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        self.perform_update(serializer)
-        return Response({"detail": "Patient updated."}, status=status.HTTP_200_OK)
-
-    def destroy(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        instance = Patient.objects.filter(pk=kwargs["pk"]).first()
-        if instance is None:
-            return Response(
-                {"detail": "Patient not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        self.perform_destroy(instance)
-        return Response({"detail": "patient has been deleted"}, status=status.HTTP_200_OK)
-
-
-
-class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.all()
-    serializer_class = AppointmentSerializer
-    http_method_names = ["get", "post", "put", "delete"]
-
-    def list(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return super().list(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        if request.query_params or request.content_type != "application/json":
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        patient = serializer.validated_data["patient"]
-        doctor = serializer.validated_data["doctor"]
-
-        other_doctor = Appointment.objects.filter(patient=patient).exclude(doctor=doctor).first()
-        if other_doctor:
-            return Response(
-                {"detail": "This patient is already assigned to a different doctor."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        active_with_doctor = Appointment.objects.filter(
-            patient=patient, doctor=doctor, status__in=[Appointment.Status.PENDING, Appointment.Status.ON_GOING]
-        ).exists()
-        if active_with_doctor:
-            return Response(
-                {"detail": "This patient already has an ongoing appointment with this doctor."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        self.perform_create(serializer)
-        return Response({"detail": "Appointment created."}, status=status.HTTP_201_CREATED)
-
-    def retrieve(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return super().retrieve(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        if request.query_params or request.content_type != "application/json":
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        data = request.data
-        if not isinstance(data, dict) or "id" not in data:
-            return Response(
-                {"detail": "'id' is required in the body."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        instance = Appointment.objects.filter(pk=data["id"]).first()
-        if instance is None:
-            return Response(
-                {"detail": "Appointment not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        payload = {k: v for k, v in data.items() if k != "id"}
-        serializer = self.get_serializer(instance, data=payload)
-        serializer.is_valid(raise_exception=True)
-
-        patient = serializer.validated_data["patient"]
-        doctor = serializer.validated_data["doctor"]
-        other_doctor = (
-            Appointment.objects.filter(patient=patient)
-            .exclude(doctor=doctor)
-            .exclude(pk=instance.pk)
-            .exists()
-        )
-        if other_doctor:
-            return Response(
-                {"detail": "This patient is already assigned to a different doctor."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        self.perform_update(serializer)
-        return Response({"detail": "Appointment updated."}, status=status.HTTP_200_OK)
-
-    def destroy(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        instance = Appointment.objects.filter(pk=kwargs["pk"]).first()
-        if instance is None:
-            return Response(
-                {"detail": "Appointment not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+        The previous version was inconsistent: Appointment returned a bare 204
+        while the other three returned 200 with a message. One behaviour now.
+        """
+        instance = self._get_object_or_404()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class UniqueNameMixin:
+    """Duplicate-name detection, shared by Doctor and Patient.
 
-        
-class MedicalRecordViewSet(viewsets.ModelViewSet):
+    The check was inline in both create() and update() -- four near-identical
+    query blocks -- and each one hand-built its own 400 response.
+
+    Scope limit, stated rather than hidden: this is an application-level check,
+    not a database guarantee. There is no unique index on name, so two
+    concurrent creates can both pass. Closing that needs a UniqueConstraint and
+    a migration, which is outside this refactor.
+    """
+
+    resource_label = "resource"
+
+    #: Extra serializer fields, besides name, that must also be unique.
+    unique_fields = ("name",)
+
+    def _duplicate_error(self, instance=None):
+        """Return an error message if a unique field collides, else None.
+
+        `instance` is excluded from the lookup so an update does not collide
+        with the row being updated.
+        """
+        # Read from the raw payload rather than validated_data: a field absent
+        # from a PATCH body must not be checked against the database, or every
+        # PATCH that omits `name` would look for a row whose name is None.
+        data = self.request.data
+        for field in self.unique_fields:
+            value = data.get(field)
+            if value in (None, ""):
+                # Not supplied (PATCH) or blank: nothing to compare against.
+                continue
+            queryset = self.get_queryset().filter(**{field: value})
+            if instance is not None:
+                queryset = queryset.exclude(pk=instance.pk)
+            if queryset.exists():
+                if len(self.unique_fields) == 1:
+                    return f"Another {self.resource_label} already has this {field}."
+                return (
+                    f"Another {self.resource_label} already has this "
+                    f"{' or '.join(self.unique_fields)}."
+                )
+        return None
+
+    def create(self, request, *args, **kwargs):
+        """Check for collisions, then delegate to ModelViewSet.
+
+        Both checks happen before any write. An earlier draft called
+        perform_create() (which saves) before the phone check, so a rejected
+        phone left an already-written row behind.
+        """
+        error = self._duplicate_error()
+        if error:
+            raise ValidationError({"detail": error})
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        instance = self._get_object_or_404()
+        error = self._duplicate_error(instance)
+        if error:
+            raise ValidationError({"detail": error})
+        return super().update(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self._get_object_or_404()
+        error = self._duplicate_error(instance)
+        if error:
+            raise ValidationError({"detail": error})
+        return super().partial_update(request, *args, **kwargs)
+
+
+class DoctorViewSet(UniqueNameMixin, BaseModelViewSet):
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorSerializer
+    resource_label = "doctor"
+
+
+class PatientViewSet(UniqueNameMixin, BaseModelViewSet):
+    queryset = Patient.objects.all()
+    serializer_class = PatientSerializer
+    resource_label = "patient"
+    # name and phone both had duplicate checks in the original code.
+    unique_fields = ("name", "phone")
+
+
+class AppointmentViewSet(BaseModelViewSet):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+
+    # No create() override: both appointment business rules moved into
+    # AppointmentSerializer.validate(), so they run identically for create,
+    # update and partial update. Previously update() was missing the duplicate
+    # active-appointment check that create() had, which made the rule
+    # enforceable-or-not depending on which verb the caller chose.
+
+
+class MedicalRecordViewSet(BaseModelViewSet):
     queryset = MedicalRecord.objects.all()
     serializer_class = MedicalRecordSerializer
 
-    def list(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return super().list(request, *args, **kwargs)
-
-    def retrieve(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return super().retrieve(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        if request.query_params or request.content_type != "application/json":
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        d = serializer.validated_data
-
-        if MedicalRecord.objects.filter(pk=d["id"]).exists():
-            return Response(
-                {"detail": "A medical record with this id already exists."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def update(self, request, *args, **kwargs):
-        if request.query_params or request.content_type != "application/json":
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        data = request.data
-        if not isinstance(data, dict) or "id" not in data:
-            return Response(
-                {"detail": "'id' is required in the body."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        instance = MedicalRecord.objects.filter(pk=data["id"]).first()
-        if instance is None:
-            return Response(
-                {"detail": "Medical record not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        payload = {k: v for k, v in data.items() if k != "id"}
-        payload["id"] = instance.pk
-        serializer = self.get_serializer(instance, data=payload)
-        serializer.is_valid(raise_exception=True)
-
-        self.perform_update(serializer)
-        return Response({"detail": "Medical record updated."}, status=status.HTTP_200_OK)
-
-    def destroy(self, request, *args, **kwargs):
-        if request.query_params or request.body:
-            return Response(
-                {"detail": "Error while processing the request."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        instance = MedicalRecord.objects.filter(pk=kwargs["pk"]).first()
-        if instance is None:
-            return Response(
-                {"detail": "Medical record not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        self.perform_destroy(instance)
-        return Response({"detail": "Medical record has been deleted"}, status=status.HTTP_200_OK)
+    # No create() override. The original rejected a body whose `id` matched an
+    # existing record; with the primary key now server-assigned and read-only
+    # there is no body id to check, and the check could never mean anything --
+    # a primary key is unique by definition.
