@@ -1,24 +1,4 @@
-"""URL routing for the healthcare API.
 
-The one change from the previous version: `put` and `patch` moved from the list
-route to the detail route.
-
-    before:  PUT /api/patients/     with the target id in the request body
-    after:   PUT /api/patients/5/   target identified by the URL
-
-That mismatch was the reason views.py could not resolve its target from the URL.
-With PUT on the collection route, the body was the only handle on the row.
-
-PATCH is newly bound. It was absent from the mapping entirely, so the
-ModelViewSet implementation was unreachable, and partial_update was dead code.
-
-Explicit `as_view({...})` mappings are kept rather than registering the
-viewsets with DefaultRouter, because that is the existing convention here and
-the route names (which the frontend and any tests may reference) are unchanged.
-The trailing `+ router.urls` from the previous version was removed: the router
-has no registered viewsets, so it contributed an empty URL list and an unused
-import.
-"""
 
 from django.urls import path
 
