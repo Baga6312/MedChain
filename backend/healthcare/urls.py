@@ -5,8 +5,11 @@ from django.urls import path
 from .views import (
     AppointmentViewSet,
     DoctorViewSet,
+    GrantAccessView,
+    LoginView,
     MedicalRecordViewSet,
     PatientViewSet,
+    RevokeAccessView,
 )
 
 doctor_list = DoctorViewSet.as_view({
@@ -62,4 +65,11 @@ urlpatterns = [
     path("doctors/<int:pk>/", doctor_detail, name="doctor-detail"),
     path("medical-records/", record_list, name="medical-record-list"),
     path("medical-records/<int:pk>/", record_detail, name="medical-record-detail"),
+    path("auth/login/", LoginView.as_view(), name="login"),
+    path("patients/<int:pk>/permissions/", GrantAccessView.as_view(), name="patient-permissions"),
+    path(
+        "patients/<int:pk>/permissions/<int:doctor_pk>/revoke/",
+        RevokeAccessView.as_view(),
+        name="patient-permission-revoke",
+    ),
 ]

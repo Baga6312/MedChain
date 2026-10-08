@@ -1,0 +1,1017 @@
+{
+  "info": {
+    "name": "MedChain API - auth contract",
+    "description": "Postman collection for the role-scoped healthcare API.\n\nHOW TO RUN\n1. Import this file (Import -> File).\n2. Run the whole collection in order, top to bottom. Each folder depends on\n   the ids captured by the ones above it.\n3. The seed command creates these accounts, all with password DemoPass123!:\n     patient1..patient5  (role PATIENT)\n     doctor1..doctor3    (role DOCTOR)\n     admin               (role ADMIN)\n\nTHROTTLE WARNING\nPOST /api/auth/login/ is rate limited to 10 per minute. Three logins run per\nfull pass, so repeated back-to-back passes can return 429 on the login requests\nonly. If that happens, wait 60s; the rest of the collection is unaffected.\n\nBase URL: http://localhost:8000 hits the backend directly. Use\nhttp://localhost to go through the nginx gateway instead - both work.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// DRF TokenAuthentication requires the literal word 'Token'. The Bearer",
+          "// preset Postman offers by default sends 'Bearer' and gets 401.",
+          "const token = pm.collectionVariables.get('token');",
+          "if (token) {",
+          "  pm.request.headers.add({ key: 'Authorization', value: 'Token ' + token });",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "role",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patient_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "doctor_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "record_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "appointment_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Auth",
+      "description": "Login captures the token and ids into collection variables. The pre-request script on the collection adds the Authorization header automatically for every other request.",
+      "item": [
+        {
+          "name": "Login as patient1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('login returns 200', () => pm.response.to.have.status(200));",
+                  "pm.test('role is PATIENT', () => pm.expect(body.role).to.eql('PATIENT'));",
+                  "pm.test('token is returned', () => pm.expect(body.token).to.be.a('string').and.not.empty);",
+                  "if (body.token) {",
+                  "  pm.collectionVariables.set('token', body.token);",
+                  "  pm.collectionVariables.set('role', body.role);",
+                  "  if (body.patient_id) pm.collectionVariables.set('patient_id', body.patient_id);",
+                  "  if (body.doctor_id) pm.collectionVariables.set('doctor_id', body.doctor_id);",
+                  "}",
+                  "console.log('logged in as', body.username, body.role);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"patient1\",\n  \"password\": \"DemoPass123!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login/",
+            "description": "Returns token, user_id, username, role, and patient_id."
+          }
+        },
+        {
+          "name": "Login as doctor1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('login returns 200', () => pm.response.to.have.status(200));",
+                  "pm.test('role is DOCTOR', () => pm.expect(body.role).to.eql('DOCTOR'));",
+                  "if (body.token) {",
+                  "  pm.collectionVariables.set('token', body.token);",
+                  "  pm.collectionVariables.set('role', body.role);",
+                  "  if (body.doctor_id) pm.collectionVariables.set('doctor_id', body.doctor_id);",
+                  "  if (body.patient_id) pm.collectionVariables.set('patient_id', body.patient_id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"doctor1\",\n  \"password\": \"DemoPass123!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login/",
+            "description": "Overwrites the token. Run 'Login as patient1' again before any patient-scoped check."
+          }
+        },
+        {
+          "name": "Login as admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('login returns 200', () => pm.response.to.have.status(200));",
+                  "pm.test('role is ADMIN', () => pm.expect(body.role).to.eql('ADMIN'));",
+                  "if (body.token) pm.collectionVariables.set('token', body.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"DemoPass123!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login/"
+          }
+        },
+        {
+          "name": "Login with wrong password (expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('bad credentials rejected', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"patient1\",\n  \"password\": \"not-the-password\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login/",
+            "description": "A failed login is recorded in AuditLog with the attempted username only."
+          }
+        },
+        {
+          "name": "Clear token (logout)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('token', '');",
+                  "pm.collectionVariables.set('role', '');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/schema/",
+            "description": "Clears the token so the 'Anonymous' folder returns 401. Hit Send."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Patients",
+      "item": [
+        {
+          "name": "List (as current role)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('list returns 200', () => pm.response.to.have.status(200));",
+                  "const rows = pm.response.json();",
+                  "const role = pm.collectionVariables.get('role');",
+                  "pm.test('scoped by role', () => {",
+                  "  if (role === 'ADMIN') pm.expect(rows.length).to.be.above(0);",
+                  "  else pm.expect(rows.length).to.be.below(6);",
+                  "});",
+                  "if (Array.isArray(rows) && rows.length) {",
+                  "  pm.collectionVariables.set('patient_id', rows[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/patients/"
+          }
+        },
+        {
+          "name": "Retrieve by id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('retrieve returns 200 or 404', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/patients/{{patient_id}}/",
+            "description": "404 here is correct when the row is outside your role's scope - that is the point."
+          }
+        },
+        {
+          "name": "Create (admin only, expect 403 as patient)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('either created or forbidden', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([201, 403]);",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "  const created = pm.response.json();",
+                  "  console.log('created patient id', created.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Test Patient\",\n  \"birth_date\": null,\n  \"phone\": \"20999999\"\n}"
+            },
+            "url": "{{baseUrl}}/api/patients/",
+            "description": "birth_date must be present even though it is nullable - omitting it returns 400. Do NOT send 'id'; it is read-only on create."
+          }
+        },
+        {
+          "name": "Update (PUT, id required in body)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('update returns 200 or 403', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{patient_id}},\n  \"name\": \"Postman Test Patient\",\n  \"birth_date\": null,\n  \"phone\": \"20999998\"\n}"
+            },
+            "url": "{{baseUrl}}/api/patients/{{patient_id}}/",
+            "description": "PUT names its target row through 'id' in the body, and that id must match the URL."
+          }
+        },
+        {
+          "name": "Delete (admin only, expect 403 otherwise)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('delete returns 200, 403 or 404', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 403, 404]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/patients/{{patient_id}}/",
+            "description": "A patient cannot delete their own row: it cascades to records and appointments that belong to clinicians."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Doctors",
+      "item": [
+        {
+          "name": "List (doubles as the grant picker)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('list returns 200', () => pm.response.to.have.status(200));",
+                  "const rows = pm.response.json();",
+                  "if (Array.isArray(rows) && rows.length) {",
+                  "  pm.collectionVariables.set('doctor_id', rows[0].id);",
+                  "  console.log('visible doctors:', rows.map(r => r.name).join(', '));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/doctors/",
+            "description": "As a patient this lists only doctors holding an active grant on your chart - it does not leak the staff directory."
+          }
+        },
+        {
+          "name": "Create (admin only)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('either created or forbidden', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([201, 403]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Test Doctor\",\n  \"specialty\": \"Radiology\"\n}"
+            },
+            "url": "{{baseUrl}}/api/doctors/"
+          }
+        },
+        {
+          "name": "Delete (admin only)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('delete returns 200, 403 or 404', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 403, 404]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/doctors/{{doctor_id}}/",
+            "description": "A doctor's appointments cascade, so only an admin may delete one."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Medical records",
+      "item": [
+        {
+          "name": "List (scoped to granted charts)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('list returns 200', () => pm.response.to.have.status(200));",
+                  "const rows = pm.response.json();",
+                  "if (Array.isArray(rows) && rows.length) {",
+                  "  pm.collectionVariables.set('record_id', rows[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/medical-records/"
+          }
+        },
+        {
+          "name": "Retrieve by id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200, 403 or 404', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 403, 404]);",
+                  "});",
+                  "if (pm.response.code === 403) {",
+                  "  console.log('403 = access revoked, not merely out of scope');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/medical-records/{{record_id}}/",
+            "description": "Every read of a record is written to AuditLog."
+          }
+        },
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('created or forbidden', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([201, 403]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": {{patient_id}},\n  \"title\": \"Postman record\",\n  \"content\": \"created from postman\"\n}"
+            },
+            "url": "{{baseUrl}}/api/medical-records/",
+            "description": "created_by is taken from the token, never from the body - a forged created_by in the payload is ignored."
+          }
+        },
+        {
+          "name": "Move record to another patient (expect 403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('reassignment refused', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([403, 404]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{record_id}},\n  \"patient\": 9999,\n  \"title\": \"moved\",\n  \"content\": \"x\"\n}"
+            },
+            "url": "{{baseUrl}}/api/medical-records/{{record_id}}/",
+            "description": "The patient FK is writable in the serializer, so this guard is what stops an authorized caller re-pointing a record onto a chart they do not own. Without it, owning one chart would be enough to hijack any record id."
+          }
+        },
+        {
+          "name": "Delete (admin only)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('delete returns 200, 403 or 404', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 403, 404]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/medical-records/{{record_id}}/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Appointments",
+      "item": [
+        {
+          "name": "List (own appointments only)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('list returns 200', () => pm.response.to.have.status(200));",
+                  "const rows = pm.response.json();",
+                  "if (Array.isArray(rows) && rows.length) {",
+                  "  pm.collectionVariables.set('appointment_id', rows[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/appointments/",
+            "description": "A doctor sees only their OWN appointments, even on a chart the patient has granted them - a grant covers the chart, not the other doctor's schedule."
+          }
+        },
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('created, forbidden, or rejected by a business rule', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([201, 400, 403]);",
+                  "});",
+                  "if (pm.response.code === 400) {",
+                  "  console.log('business rule:', JSON.stringify(pm.response.json()));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": {{patient_id}},\n  \"doctor\": {{doctor_id}},\n  \"date\": \"2026-12-01T10:00:00Z\",\n  \"notes\": \"postman booking\"\n}"
+            },
+            "url": "{{baseUrl}}/api/appointments/",
+            "description": "400 is a business rule (one doctor per patient, no duplicate active appointment), 403 is a permission problem. Two existing rules live in AppointmentSerializer.validate()."
+          }
+        },
+        {
+          "name": "PATCH (expect 405 - not supported)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('PATCH is not allowed on appointments', () => pm.response.to.have.status(405));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{appointment_id}},\n  \"notes\": \"patch\"\n}"
+            },
+            "url": "{{baseUrl}}/api/appointments/{{appointment_id}}/",
+            "description": "http_method_names on this viewset is get/post/put/delete. Use PUT."
+          }
+        },
+        {
+          "name": "Change status via PUT (ignored - read-only)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('update accepted', () => pm.response.to.have.status(200));",
+                  "pm.test('status was NOT changed', () => {",
+                  "  const list = pm.collectionVariables.get('__status_probe');",
+                  "  pm.expect(list).to.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{appointment_id}},\n  \"patient\": {{patient_id}},\n  \"doctor\": {{doctor_id}},\n  \"date\": \"2026-12-01T10:00:00Z\",\n  \"notes\": \"postman booking\",\n  \"status\": \"completed\"\n}"
+            },
+            "url": "{{baseUrl}}/api/appointments/{{appointment_id}}/",
+            "description": "PUT succeeds but 'status' is read-only on the serializer, so the value is discarded. Confirm by re-running 'List' - status is unchanged. Changing appointment status is deliberately out of scope for this change."
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Access grants",
+      "description": "Run 'Login as patient1' first. These are the endpoints that actually govern who can read a chart.",
+      "item": [
+        {
+          "name": "Grant doctor access",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('grant accepted', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"doctor_id\": {{doctor_id}} }"
+            },
+            "url": "{{baseUrl}}/api/patients/{{patient_id}}/permissions/",
+            "description": "Re-granting a revoked row clears revoked_at rather than failing, because (patient, doctor) is unique."
+          }
+        },
+        {
+          "name": "Revoke doctor access",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('revoke accepted', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": "{{baseUrl}}/api/patients/{{patient_id}}/permissions/{{doctor_id}}/revoke/"
+          }
+        },
+        {
+          "name": "Admin tries to grant (expect 403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('admin cannot share on a patient behalf', () => pm.response.to.have.status(403));",
+                  "if (pm.response.code !== 403) {",
+                  "  console.log('run Login as admin first');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"doctor_id\": 1 }"
+            },
+            "url": "{{baseUrl}}/api/patients/1/permissions/",
+            "description": "An admin's access is implicit and must never become a durable share. Run 'Login as admin' first."
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Security checks",
+      "description": "Negative and abuse cases at the trust boundaries.",
+      "item": [
+        {
+          "name": "Anonymous read (expect 401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('anonymous rejected', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/patients/",
+            "description": "Run 'Clear token (logout)' first."
+          }
+        },
+        {
+          "name": "Anonymous write (expect 401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('anonymous write rejected', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Anon\",\n  \"birth_date\": null,\n  \"phone\": \"1\"\n}"
+            },
+            "url": "{{baseUrl}}/api/patients/"
+          }
+        },
+        {
+          "name": "Wrong auth scheme - Bearer instead of Token (expect 401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('bearer is not accepted', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/patients/",
+            "description": "SessionAuthentication is deliberately not installed, so the admin session cookie cannot be used as an API credential and no CSRF token is required."
+          }
+        },
+        {
+          "name": "Garbage token (expect 401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('invalid token rejected', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token 0000000000000000000000000000000000000000"
+              }
+            ],
+            "url": "{{baseUrl}}/api/patients/"
+          }
+        },
+        {
+          "name": "PUT without id in body (expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('id is required in a PUT body', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"No Id\",\n  \"birth_date\": null,\n  \"phone\": \"2\"\n}"
+            },
+            "url": "{{baseUrl}}/api/patients/{{patient_id}}/"
+          }
+        },
+        {
+          "name": "POST with read-only id (expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('client cannot choose the pk', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 4242,\n  \"name\": \"Chosen Id\",\n  \"birth_date\": null,\n  \"phone\": \"3\"\n}"
+            },
+            "url": "{{baseUrl}}/api/patients/"
+          }
+        },
+        {
+          "name": "GET with query string (expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('query params are rejected', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/patients/?page=2",
+            "description": "The viewsets are in strict mode: GET/DELETE carrying a query string or a body are rejected. So ?page=2 and ?format=json both fail. This predates auth."
+          }
+        },
+        {
+          "name": "Duplicate patient name+phone (expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('duplicate rejected', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Patient 1\",\n  \"birth_date\": null,\n  \"phone\": \"20000001\"\n}"
+            },
+            "url": "{{baseUrl}}/api/patients/",
+            "description": "Run as admin. Enforced in the viewset only, so two concurrent creates can still both succeed."
+          }
+        }
+      ]
+    }
+  ]
+}

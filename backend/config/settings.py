@@ -47,6 +47,23 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    # Token only, deliberately without SessionAuthentication. The admin session
+    # cookie would otherwise be accepted as an API credential, and a cookie
+    # authenticator makes DRF enforce CSRF on every write -- which the SPA
+    # (frontend/src/api.jsx sends no X-CSRFToken) would fail with 403.
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    # DRF's own default is AllowAny, which left every endpoint anonymous-open.
+    # Any view needing public access (login) overrides this explicitly.
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    # Throttle rates are opt-in per scope, so the login rate has to be declared
+    # here or ScopedRateThrottle falls through to its "no limit" default.
+    "DEFAULT_THROTTLE_RATES": {
+        "login": "10/min",
+    },
 }
 
 SPECTACULAR_SETTINGS = {

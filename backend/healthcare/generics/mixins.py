@@ -17,6 +17,17 @@ class StrictRequestMixin:
     not_found_message = "Resource not found."
     deleted_message = "Resource has been deleted."
 
+    def validate_destroy(self, request, instance):
+        """Return a Response to short-circuit, or None to proceed.
+
+        The delete guard lives here rather than per viewset because destroy() is
+        the one write path with no payload to validate: scoping the queryset is
+        not enough on its own, because a row in scope can still be one the
+        caller may not destroy (Appointment.patient and .doctor are CASCADE, so
+        deleting either destroys the other side's rows too).
+        """
+        return None
+
     def _reject_if_dirty(self, request):
         if request.query_params or request.body:
             return _bad_request()
@@ -35,6 +46,9 @@ class StrictRequestMixin:
         instance = self.get_queryset().filter(pk=kwargs["pk"]).first()
         if instance is None:
             return Response({"detail": self.not_found_message}, status=status.HTTP_404_NOT_FOUND)
+        err = self.validate_destroy(request, instance)
+        if err:
+            return err
         self.perform_destroy(instance)
         if self.deleted_message is None:
             return Response(status=status.HTTP_204_NO_CONTENT)

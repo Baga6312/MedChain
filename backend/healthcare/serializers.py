@@ -117,3 +117,13 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
             "title": {"required": True},
             "content": {"required": True},
         }
+
+
+class AccessGrantSerializer(serializers.Serializer):
+    """Body of POST /api/patients/<pk>/permissions/: the doctor to authorize.
+
+    Declared here rather than left as a bare request.data read so the endpoint
+    appears in the generated schema with a documented, validated body.
+    """
+
+    doctor_id = serializers.IntegerField(help_text="id of the doctor to grant access to")

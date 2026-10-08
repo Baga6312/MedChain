@@ -88,6 +88,7 @@ Authorization: Token <token>
 
 Endpoints principaux :
 
+- `POST /api/auth/login/`
 - `GET /api/patients/`
 - `GET /api/doctors/`
 - `GET /api/appointments/`
@@ -101,7 +102,8 @@ Comptes de démonstration créés par `python manage.py seed` :
 - `patient1` à `patient5`
 - `doctor1` à `doctor3`
 - `admin`
-- Mot de passe : `DemoPass123!`
+- Mot de passe : `DemoPass123!` (variable `SEED_PASSWORD` pour le changer ;
+  ces comptes sont des données de démonstration, pas des identifiants réels)
 
 ## Structure du projet
 
@@ -125,8 +127,15 @@ docker-compose.yml
 
 ## Limites actuelles
 
+- **Le frontend React n'envoie aucun en-tête `Authorization`** (`frontend/src/api.jsx`).
+  Depuis l'activation de l'authentification, tous ses appels à l'API renvoient `401`
+  tant que la connexion et le stockage du jeton ne sont pas branchés.
 - Les écrans React utilisent encore des données mockées pour la démonstration visuelle.
-- Le formulaire de connexion frontend doit encore être relié directement à `POST /api/auth/login/`.
+- `GET /api/audit-logs/` n'existe pas : les journaux sont consultables via
+  l'admin Django, sur le modèle en lecture seule.
+- Le schéma OpenAPI (`/api/schema/`, `/api/docs/`) reste public. Le protéger
+  exige d'ajouter des identifiants au healthcheck de `docker-compose.yml`, qui
+  appelle `/api/docs/` sans authentification.
 - Le chiffrement AES, la Blockchain, l'IA, l'IoT et Kubernetes restent des extensions prévues par la roadmap.
 
 Arrêter les services :
