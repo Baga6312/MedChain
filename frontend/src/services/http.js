@@ -1,6 +1,23 @@
+const BASE = '/api';
+
+export class ApiError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
+function format(body) {
+  if (!body) return 'Erreur inattendue.';
+  if (body.detail) return body.detail;
+  return Object.entries(body)
+    .map(([key, value]) => `${key}: ${[].concat(value).join(' ')}`)
+    .join(' · ');
+}
+
 export const tokens = {
   get: () => localStorage.getItem('access'),
-  set: (a) => localStorage.setItem('access', a),
+  set: (access) => localStorage.setItem('access', access),
   clear: () => localStorage.removeItem('access'),
 };
 
@@ -10,21 +27,24 @@ export async function request(path, { method = 'GET', json, auth = true } = {}) 
     init.headers['Content-Type'] = 'application/json';
     init.body = JSON.stringify(json);
   }
-  const t = tokens.get();
-  if (auth && t) init.headers.Authorization = `Bearer ${t}`;
 
-  const res = await fetch(`${BASE}${path}`, init);
-  if (res.status === 204) return null;
+  const token = tokens.get();
+  if (auth && token) init.headers.Authorization = `Token ${token}`;
+
+  const response = await fetch(`${BASE}${path}`, init);
+  if (response.status === 204) return null;
+
   let body = null;
   try {
-    body = await res.json();
+    body = await response.json();
   } catch {
-    /* empty body */
+    // The response may intentionally have no JSON body.
   }
-  if (res.status === 401 && auth) {
+
+  if (response.status === 401 && auth) {
     tokens.clear();
     window.location.assign('/login');
   }
-  if (!res.ok) throw new ApiError(res.status, format(body));
+  if (!response.ok) throw new ApiError(response.status, format(body));
   return body;
 }

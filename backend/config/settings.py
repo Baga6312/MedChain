@@ -47,6 +47,12 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 
 SPECTACULAR_SETTINGS = {
@@ -55,6 +61,16 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
 }
 
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "")
+GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get("GOOGLE_OAUTH_CLIENT_SECRET", "")
+GOOGLE_OAUTH_REDIRECT_URI = os.environ.get(
+    "GOOGLE_OAUTH_REDIRECT_URI",
+    "http://localhost:8000/api/auth/google/callback/",
+)
+FRONTEND_OAUTH_CALLBACK_URL = os.environ.get(
+    "FRONTEND_OAUTH_CALLBACK_URL",
+    "http://localhost:5173/oauth/callback",
+)
 
 
 

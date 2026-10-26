@@ -2,6 +2,7 @@
 
 from django.urls import path
 
+from .oauth import google_callback, google_login
 from .views import (
     AppointmentViewSet,
     DoctorViewSet,
@@ -54,6 +55,8 @@ record_detail = MedicalRecordViewSet.as_view({
 })
 
 urlpatterns = [
+    path("auth/google/login/", google_login, name="google-login"),
+    path("auth/google/callback/", google_callback, name="google-callback"),
     path("appointments/", appointment_list, name="appointment-list"),
     path("appointments/<int:pk>/", appointment_detail, name="appointment-detail"),
     path("patients/", patient_list, name="patient-list"),
