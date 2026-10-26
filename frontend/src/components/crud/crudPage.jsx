@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AlertTriangle, Plus, X } from 'lucide-react';
-import { api } from './api';
-import { resources } from './resources';
+import { api } from '../../services/resourceService';
+import { resources } from '../../config/resources';
 
 const toInput = (f, v) => (v == null ? '' : f.type === 'datetime-local' ? String(v).slice(0, 16) : v);
 const fromInput = (f, v) => (f.ref ? Number(v) : v === '' && f.nullable ? null : v);

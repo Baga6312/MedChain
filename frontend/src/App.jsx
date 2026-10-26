@@ -1,48 +1,30 @@
-import { useState } from 'react';
-import { CheckCircle2, LockKeyhole, XCircle } from 'lucide-react';
-import CrudPage from './crudPage';
-import { resources } from './resources';
-import './crud.css';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import AppShell from './components/layout/AppShell';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import ResourcePage from './pages/ResourcePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import OAuthCallbackPage from './pages/OAuthCallbackPage';
+import { NotifyProvider } from './context/NotifyContext';
+import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
-  const [page, setPage] = useState('patients');
-  const [toast, setToast] = useState(null);
-
-  function notify(message, tone = 'success') {
-    setToast({ message, tone });
-    window.setTimeout(() => setToast(null), 3200);
-  }
-
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="sidebar-brand">
-          <span className="brand-mark"><LockKeyhole size={18} /></span>
-          <div>
-            <strong>MedChain</strong>
-            <small>Healthcare API</small>
-          </div>
-        </div>
-        <nav className="side-nav">
-          {Object.entries(resources).map(([key, { label, icon: Icon }]) => (
-            <button key={key} className={page === key ? 'active' : ''} onClick={() => setPage(key)}>
-              <Icon size={18} />
-              <span>{label}</span>
-            </button>
-          ))}
-        </nav>
-      </aside>
-      <main className="main-content">
-        <div className="page-wrap">
-          <CrudPage key={page} resource={page} notify={notify} />
-        </div>
-      </main>
-      {toast && (
-        <div className={`toast ${toast.tone}`}>
-          {toast.tone === 'danger' ? <XCircle size={18} /> : <CheckCircle2 size={18} />}
-          {toast.message}
-        </div>
-      )}
-    </div>
+    <NotifyProvider>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppShell />}>
+              <Route path="/" element={<Navigate to="/patients" replace />} />
+              <Route path="/:resource" element={<ResourcePage />} />
+            </Route>
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </NotifyProvider>
   );
 }
