@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -33,3 +34,20 @@ class MedicalRecord(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class SessionToken(models.Model):
+    token_hash = models.CharField(max_length=64, unique=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="session_tokens",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "expires_at"]),
+            models.Index(fields=["expires_at"]),
+        ]

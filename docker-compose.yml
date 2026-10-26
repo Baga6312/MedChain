@@ -1,4 +1,15 @@
 services:
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   db:
     image: postgres:16
     environment:
@@ -28,12 +39,15 @@ services:
       DB_PASSWORD: shops_pass
       DB_HOST: db
       DB_PORT: "5432"
+      REDIS_URL: redis://redis:6379/0
       GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
       GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET:-}
       GOOGLE_OAUTH_REDIRECT_URI: ${GOOGLE_OAUTH_REDIRECT_URI:-http://localhost:8000/api/auth/google/callback/}
       FRONTEND_OAUTH_CALLBACK_URL: ${FRONTEND_OAUTH_CALLBACK_URL:-http://localhost:5173/oauth/callback}
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     ports:
       - "8000:8000"
@@ -69,3 +83,4 @@ services:
 
 volumes:
   pgdata:
+  redisdata:

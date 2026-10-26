@@ -1,4 +1,5 @@
 import json
+import hashlib
 import secrets
 import urllib.error
 import urllib.parse
@@ -11,7 +12,10 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonRespon
 from django.views.decorators.http import require_GET
 from google.auth.transport import requests
 from google.oauth2 import id_token
-from rest_framework.authtoken.models import Token
+from django.utils import timezone
+from datetime import timedelta
+
+from .models import SessionToken
 
 
 GOOGLE_AUTHORIZATION_URL = "https://accounts.google.com/o/oauth2/v2/auth"
@@ -115,6 +119,15 @@ def google_callback(request):
         user.set_unusable_password()
         user.save(update_fields=["password"])
 
-    token, _ = Token.objects.get_or_create(user=user)
-    callback_url = f"{settings.FRONTEND_OAUTH_CALLBACK_URL}#access={urllib.parse.quote(token.key)}"
+    raw_token = secrets.token_urlsafe(32)
+    SessionToken.objects.create(
+        token_hash=hashlib.sha256(raw_token.encode("utf-8")).hexdigest(),
+        user=user,
+        expires_at=timezone.now()
+        + timedelta(seconds=settings.SESSION_TOKEN_LIFETIME_SECONDS),
+    )
+    callback_url = (
+        f"{settings.FRONTEND_OAUTH_CALLBACK_URL}"
+        f"#access={urllib.parse.quote(raw_token)}"
+    )
     return HttpResponseRedirect(callback_url)

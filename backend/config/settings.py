@@ -48,12 +48,15 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
+        "healthcare.authentication.RedisFirstTokenAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
 }
+
+REDIS_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
+SESSION_TOKEN_LIFETIME_SECONDS = 60 * 60
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "MedChain API",
