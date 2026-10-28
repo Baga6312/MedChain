@@ -42,6 +42,10 @@ Les écrans utilisent actuellement des données de démonstration. Le proxy Ngin
 
 ## Démarrage complet avec Docker
 
+Avant le démarrage, créer un fichier `.env` local à partir de `.env.example` et
+définir `MEDCHAIN_ADMIN_EMAIL` et `MEDCHAIN_ADMIN_PASSWORD`. Ce fichier est
+ignoré par Git et n'est jamais envoyé au dépôt.
+
 Depuis la racine du projet, démarrer les trois services :
 
 ```powershell
@@ -134,5 +138,4 @@ Arrêter les services :
 ```powershell
 docker compose down
 ```
-
 

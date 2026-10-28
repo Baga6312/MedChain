@@ -1,11 +1,11 @@
-import { LockKeyhole } from 'lucide-react';
+import { LockKeyhole, ShieldCheck } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { resources } from '../../config/resources';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Sidebar() {
   const { pathname } = useLocation();
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -18,6 +18,15 @@ export default function Sidebar() {
         </div>
       </div>
       <nav className="side-nav">
+        {isAdmin && (
+          <button
+            className={pathname === '/admin' ? 'active' : ''}
+            onClick={() => navigate('/admin')}
+          >
+            <ShieldCheck size={18} />
+            <span>Administration</span>
+          </button>
+        )}
         {Object.entries(resources).map(([key, { label, icon: Icon }]) => (
           <button
             key={key}

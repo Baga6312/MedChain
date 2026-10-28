@@ -1,12 +1,23 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { authService } from '../services/authService';
-import { tokens } from '../services/http';
+import { request, tokens } from '../services/http';
 
 const Ctx = createContext(null);
 export const useAuth = () => useContext(Ctx);
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(tokens.get());
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (!token) {
+      setUser(null);
+      return;
+    }
+    request('/auth/me/')
+      .then(setUser)
+      .catch(() => setUser(null));
+  }, [token]);
 
   const value = {
     isAuthed: !!token,
@@ -22,7 +33,10 @@ export function AuthProvider({ children }) {
     logout: () => {
       authService.logout();
       setToken(null);
+      setUser(null);
     },
   };
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ ...value, user, isAdmin: user?.role === 'admin' || user?.is_staff }}>
+    {children}
+  </Ctx.Provider>;
 }

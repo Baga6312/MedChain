@@ -40,6 +40,8 @@ services:
       DB_HOST: db
       DB_PORT: "5432"
       REDIS_URL: redis://redis:6379/0
+      MEDCHAIN_ADMIN_EMAIL: ${MEDCHAIN_ADMIN_EMAIL:?MEDCHAIN_ADMIN_EMAIL is required}
+      MEDCHAIN_ADMIN_PASSWORD: ${MEDCHAIN_ADMIN_PASSWORD:?MEDCHAIN_ADMIN_PASSWORD is required}
       GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
       GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET:-}
       GOOGLE_OAUTH_REDIRECT_URI: ${GOOGLE_OAUTH_REDIRECT_URI:-http://localhost:8000/api/auth/google/callback/}
@@ -68,8 +70,7 @@ services:
     depends_on:
       backend:
         condition: service_healthy
-    ports:
-      - "5173:80"
+    # pas de "ports" : le frontend n'est accessible que via le gateway
 
   gateway:
     image: nginx:alpine
@@ -79,7 +80,7 @@ services:
       - frontend
       - backend
     ports:
-      - "80:80"
+      - "5173:80"   # point d'entrée unique : http://localhost:5173
 
 volumes:
   pgdata:

@@ -31,3 +31,19 @@
 }
 .auth-card .field input:focus { border-color: #0f3545; box-shadow: 0 0 0 3px rgba(15, 53, 69, 0.15); }
 .auth-card p { margin: 0; font-size: 0.9rem; text-align: center; }
+.event-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-top: 1px solid #edf2f5; color: var(--teal); }
+.event-row > div { min-width: 0; flex: 1; }
+.event-row strong, .event-row small { display: block; }
+.event-row strong { color: var(--ink); font-size: .75rem; }
+.event-row small { color: var(--muted); font-size: .68rem; margin-top: 3px; }
+.event-row .text-button { white-space: nowrap; }
+.admin-header-actions { display: flex; align-items: center; gap: 18px; }
+.search-field { display: flex; align-items: center; gap: 7px; border: 1px solid var(--line); border-radius: 5px; padding: 0 9px; color: var(--muted); }
+.search-field input { border: 0; outline: 0; width: 150px; min-height: 34px; font-size: .72rem; }
+.form-hint { color: var(--muted); font-size: .72rem; line-height: 1.5; }
+@media (max-width: 900px) {
+  .metrics-grid.four { grid-template-columns: repeat(2, 1fr); }
+  .admin-grid { grid-template-columns: 1fr; }
+  .admin-header-actions { align-items: flex-end; flex-direction: column; gap: 10px; }
+  .admin-grid .span-2 { grid-row: auto; }
+}

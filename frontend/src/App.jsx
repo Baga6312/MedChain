@@ -5,6 +5,7 @@ import ResourcePage from './pages/ResourcePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import OAuthCallbackPage from './pages/OAuthCallbackPage';
+import AdminDashboard from './pages/AdminDashboard';
 import { NotifyProvider } from './context/NotifyContext';
 import { AuthProvider } from './context/AuthContext';
 
@@ -19,6 +20,7 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppShell />}>
               <Route path="/" element={<Navigate to="/patients" replace />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/:resource" element={<ResourcePage />} />
             </Route>
           </Route>
