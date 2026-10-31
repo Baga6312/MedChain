@@ -79,6 +79,22 @@ consultables dans Kibana. Fluent Bit collecte les logs Docker et les envoie
 uniquement au service Elasticsearch local. Les données sont persistées dans le
 volume Docker `elasticsearchdata`. Voir [logging/README.md](logging/README.md).
 
+## Kubernetes et Argo CD
+
+Une base de manifests Kustomize se trouve dans
+[kubernetes](kubernetes). Elle contient un overlay de développement et une
+définition d'application Argo CD. Les valeurs sensibles sont séparées dans
+`base/config/secret.example.yaml` comme modèle uniquement; elles doivent être
+remplacées par Sealed Secrets, SOPS, External Secrets Operator ou Vault dans
+le dépôt GitOps.
+
+Les services sans état sont configurés avec deux replicas. PostgreSQL et
+Elasticsearch restent volontairement en nœud unique dans cette fondation:
+deux primaires indépendants ne constituent pas une haute disponibilité sûre.
+Ils devront être remplacés par un service managé ou un opérateur avant la
+production. Redis utilise `/data` avec un PVC par pod; `/dev/mem` n'est pas un
+emplacement de stockage.
+
 Vérifier les services :
 
 ```powershell
