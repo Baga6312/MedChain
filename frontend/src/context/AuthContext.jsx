@@ -23,6 +23,12 @@ export function AuthProvider({ children }) {
       .finally(() => setAuthReady(true));
   }, [token]);
 
+  async function refreshUser() {
+    const profile = await request('/auth/me/');
+    setUser(profile);
+    return profile;
+  }
+
   const value = {
     isAuthed: !!token,
     login: async (email, password) => {
@@ -40,7 +46,7 @@ export function AuthProvider({ children }) {
       setUser(null);
     },
   };
-  return <Ctx.Provider value={{ ...value, user, authReady, isAdmin: user?.role === 'admin' || user?.is_staff }}>
+  return <Ctx.Provider value={{ ...value, user, refreshUser, authReady, isAdmin: user?.role === 'admin' || user?.is_staff }}>
     {children}
   </Ctx.Provider>;
 }

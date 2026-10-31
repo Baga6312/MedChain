@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 admin.save(update_fields=update_fields)
         UserProfile.objects.get_or_create(user=admin, defaults={"role": UserProfile.Role.ADMIN})
 
-        demo_password = os.environ.get("MEDCHAIN_DEMO_PASSWORD", "MedChainDemo123!")
+        demo_password = os.environ["MEDCHAIN_DEMO_PASSWORD"]
         demo_doctor_user, _ = User.objects.get_or_create(
             username="demo.doctor@medchain.local",
             defaults={"email": "demo.doctor@medchain.local", "first_name": "Demo", "last_name": "Doctor"},

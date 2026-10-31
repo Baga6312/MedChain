@@ -1,5 +1,6 @@
 import json
 import hashlib
+import logging
 import secrets
 import urllib.error
 import urllib.parse
@@ -7,6 +8,7 @@ import urllib.request
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
 from django.core import signing
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.views.decorators.http import require_GET
@@ -16,7 +18,11 @@ from django.utils import timezone
 from datetime import timedelta
 
 from .auth_views import _ensure_role_record
-from .models import SessionToken
+from .models import SessionToken, UserProfile
+from .profile_cache import invalidate_profile
+
+
+logger = logging.getLogger(__name__)
 
 
 GOOGLE_AUTHORIZATION_URL = "https://accounts.google.com/o/oauth2/v2/auth"
@@ -75,6 +81,42 @@ def _exchange_code(code):
         return None
 
 
+def _save_google_avatar(user, picture_url):
+    parsed_url = urllib.parse.urlsplit(str(picture_url or ""))
+    hostname = (parsed_url.hostname or "").lower()
+    if (
+        parsed_url.scheme != "https"
+        or not hostname
+        or not (
+            hostname == "googleusercontent.com"
+            or hostname.endswith(".googleusercontent.com")
+        )
+    ):
+        return
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    if profile.avatar:
+        return
+    request = urllib.request.Request(
+        picture_url,
+        headers={"User-Agent": "MedChain/1.0"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=10) as response:
+            content_type = response.headers.get("Content-Type", "")
+            image_data = response.read()
+        if not content_type.startswith("image/") or not image_data:
+            logger.warning("Google avatar response was not a valid image for user %s.", user.pk)
+            return
+        profile.avatar.save(
+            f"google-{user.pk}.jpg",
+            ContentFile(image_data),
+            save=True,
+        )
+        invalidate_profile(user.pk)
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError):
+        logger.warning("Could not download Google avatar for user %s.", user.pk)
+
+
 @require_GET
 def google_callback(request):
     if not settings.GOOGLE_OAUTH_CLIENT_ID or not settings.GOOGLE_OAUTH_CLIENT_SECRET:
@@ -121,6 +163,7 @@ def google_callback(request):
         user.save(update_fields=["password"])
 
     _ensure_role_record(user)
+    _save_google_avatar(user, claims.get("picture"))
 
     raw_token = secrets.token_urlsafe(32)
     SessionToken.objects.create(

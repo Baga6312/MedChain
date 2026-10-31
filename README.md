@@ -43,7 +43,7 @@ Les écrans utilisent actuellement des données de démonstration. Le proxy Ngin
 ## Démarrage complet avec Docker
 
 Avant le démarrage, créer un fichier `.env` local à partir de `.env.example` et
-définir `MEDCHAIN_ADMIN_EMAIL` et `MEDCHAIN_ADMIN_PASSWORD`. Ce fichier est
+remplacer tous les secrets et valeurs d'environnement. Ce fichier est
 ignoré par Git et n'est jamais envoyé au dépôt.
 
 Depuis la racine du projet, démarrer les trois services :
@@ -56,12 +56,18 @@ Le backend attend PostgreSQL, applique les migrations, charge les utilisateurs d
 
 URLs utiles :
 
-- Frontend : http://localhost:5173/
+- Frontend : http://localhost/
 - API directe : http://localhost:8000/api/
-- API via le proxy frontend : http://localhost:5173/api/
+- API via la passerelle : http://localhost/api/
 - Documentation Swagger : http://localhost:8000/api/docs/
-- Swagger via frontend : http://localhost:5173/api/docs/
+- Swagger via la passerelle : http://localhost/api/docs/
 - Schéma OpenAPI : http://localhost:8000/api/schema/
+
+Les paramètres sont centralisés dans `.env`. Les secrets destinés à Kubernetes
+(`DJANGO_SECRET_KEY`, mots de passe, secret OAuth) doivent être stockés dans un
+`Secret`; les URLs, hôtes, ports et chemins doivent être stockés dans un
+`ConfigMap`. Le stockage local utilise `STORAGE_BACKEND` et peut être remplacé
+par un backend S3 sans modifier les modèles ni le frontend.
 
 Vérifier les services :
 
@@ -138,4 +144,3 @@ Arrêter les services :
 ```powershell
 docker compose down
 ```
-

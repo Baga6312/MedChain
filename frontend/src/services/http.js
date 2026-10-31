@@ -21,12 +21,13 @@ export const tokens = {
   clear: () => localStorage.removeItem('access'),
 };
 
-export async function request(path, { method = 'GET', json, auth = true } = {}) {
+export async function request(path, { method = 'GET', json, formData, auth = true } = {}) {
   const init = { method, headers: {} };
   if (json !== undefined) {
     init.headers['Content-Type'] = 'application/json';
     init.body = JSON.stringify(json);
   }
+  if (formData !== undefined) init.body = formData;
 
   const token = tokens.get();
   if (auth && token) init.headers.Authorization = `Token ${token}`;

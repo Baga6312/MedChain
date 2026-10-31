@@ -24,6 +24,7 @@ def _build_profile(user):
         "role": profile.role if profile else ("admin" if user.is_staff else "patient"),
         "phone": profile.phone if profile else "",
         "address": profile.address if profile else "",
+        "avatar_url": profile.avatar.url if profile and profile.avatar else "",
     }
 
 

@@ -30,7 +30,7 @@ const eventLabels = {
 };
 
 export default function RoleDashboard() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const notify = useNotify();
   const [episodes, setEpisodes] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -41,6 +41,8 @@ export default function RoleDashboard() {
   const [selectedPhase, setSelectedPhase] = useState({});
   const [phaseData, setPhaseData] = useState({ name: '', summary: '' });
   const [eventData, setEventData] = useState({ title: '', description: '', result: '', event_type: 'note', treatment_phase: '' });
+  const [profileData, setProfileData] = useState({ first_name: user.first_name || '', last_name: user.last_name || '', phone: user.phone || '', address: user.address || '', avatar: null });
+  const [profileSaving, setProfileSaving] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -55,6 +57,25 @@ export default function RoleDashboard() {
   useEffect(() => {
     load();
   }, [load]);
+
+  async function saveProfile(event) {
+    event.preventDefault();
+    setProfileSaving(true);
+    try {
+      const formData = new FormData();
+      Object.entries(profileData).forEach(([key, value]) => {
+        if (value !== null) formData.append(key, value);
+      });
+      await request('/auth/profile/', { method: 'PATCH', formData });
+      await refreshUser();
+      setProfileData((value) => ({ ...value, avatar: null }));
+      notify('Profil mis à jour.');
+    } catch (requestError) {
+      notify(requestError.message, 'danger');
+    } finally {
+      setProfileSaving(false);
+    }
+  }
 
   async function changeStatus(id, status) {
     try {
@@ -163,12 +184,20 @@ export default function RoleDashboard() {
           <div><h2>Mon profil</h2><p>Informations personnelles, hors dossier médical.</p></div>
           <UserRound size={20} />
         </div>
-        <div className="content-grid">
-          <p><strong>Nom</strong><br />{user.first_name} {user.last_name}</p>
-          <p><strong>Email</strong><br />{user.email}</p>
-          <p><strong>Téléphone</strong><br />{user.phone || '—'}</p>
-          <p><strong>Adresse</strong><br />{user.address || '—'}</p>
-        </div>
+        <form className="profile-settings" onSubmit={saveProfile}>
+          <div className="profile-avatar-preview">
+            {user.avatar_url ? <img src={user.avatar_url} alt="Avatar du profil" /> : <UserRound size={26} />}
+          </div>
+          <label>Photo de profil<input type="file" accept="image/*" onChange={(event) => setProfileData((value) => ({ ...value, avatar: event.target.files[0] || null }))} /></label>
+          <div className="profile-fields">
+            <label>Prénom<input value={profileData.first_name} onChange={(event) => setProfileData((value) => ({ ...value, first_name: event.target.value }))} /></label>
+            <label>Nom<input value={profileData.last_name} onChange={(event) => setProfileData((value) => ({ ...value, last_name: event.target.value }))} /></label>
+            <label>Email<input value={user.email} disabled /></label>
+            <label>Téléphone<input value={profileData.phone} onChange={(event) => setProfileData((value) => ({ ...value, phone: event.target.value }))} /></label>
+            <label className="profile-wide">Adresse<input value={profileData.address} onChange={(event) => setProfileData((value) => ({ ...value, address: event.target.value }))} /></label>
+          </div>
+          <button className="primary-button" disabled={profileSaving}>{profileSaving ? 'Enregistrement…' : 'Enregistrer le profil'}</button>
+        </form>
       </section>
 
       {error && <div className="inline-error"><AlertTriangle size={16} /> {error}</div>}

@@ -8,6 +8,7 @@ from .admin_views import (
     dashboard,
     force_logout,
     security_alerts,
+    update_profile,
     users,
 )
 from .auth_views import login, register
@@ -82,6 +83,7 @@ urlpatterns = [
     path("auth/login/", login, name="login"),
     path("auth/register/", register, name="register"),
     path("auth/me/", current_user, name="current-user"),
+    path("auth/profile/", update_profile, name="update-profile"),
     path("auth/google/login/", google_login, name="google-login"),
     path("auth/google/callback/", google_callback, name="google-callback"),
     path("appointments/", appointment_list, name="appointment-list"),

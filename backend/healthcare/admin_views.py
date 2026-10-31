@@ -5,7 +5,8 @@ from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework import permissions, status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, parser_classes, permission_classes
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 
 from .models import (
@@ -78,6 +79,26 @@ def sync_role_record(user, role):
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
 def current_user(request):
+    return Response(user_data(request.user))
+
+
+@api_view(["PATCH"])
+@permission_classes([permissions.IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def update_profile(request):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    allowed_user_fields = ["first_name", "last_name"]
+    for field in allowed_user_fields:
+        if field in request.data:
+            setattr(request.user, field, str(request.data[field]).strip())
+    request.user.save(update_fields=allowed_user_fields)
+    for field in ["phone", "address"]:
+        if field in request.data:
+            setattr(profile, field, str(request.data[field]).strip())
+    if "avatar" in request.FILES:
+        profile.avatar = request.FILES["avatar"]
+    profile.save()
+    invalidate_profile(request.user.pk)
     return Response(user_data(request.user))
 
 

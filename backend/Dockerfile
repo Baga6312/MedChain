@@ -9,8 +9,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 RUN addgroup --system django && adduser --system --ingroup django django \
+	&& mkdir -p /app/media \
+	&& chmod 777 /app/media \
 	&& chown -R django:django /app
 USER django
 
 EXPOSE 8000
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--worker-tmp-dir", "/dev/shm"]
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${BACKEND_PORT:-8000} --worker-tmp-dir /dev/shm"]

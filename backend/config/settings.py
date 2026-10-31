@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-development-only')
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', '0') == '1'
+DEBUG = os.environ["DJANGO_DEBUG"] == "1"
 
-ALLOWED_HOSTS = [host.strip() for host in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if host.strip()]
+ALLOWED_HOSTS = [host.strip() for host in os.environ["DJANGO_ALLOWED_HOSTS"].split(",") if host.strip()]
 
 
 # Application definition
@@ -55,7 +55,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-REDIS_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
+REDIS_URL = os.environ["REDIS_URL"]
 SESSION_TOKEN_LIFETIME_SECONDS = 60 * 60
 
 SPECTACULAR_SETTINGS = {
@@ -66,14 +66,8 @@ SPECTACULAR_SETTINGS = {
 
 GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "")
 GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get("GOOGLE_OAUTH_CLIENT_SECRET", "")
-GOOGLE_OAUTH_REDIRECT_URI = os.environ.get(
-    "GOOGLE_OAUTH_REDIRECT_URI",
-    "http://localhost:8000/api/auth/google/callback/",
-)
-FRONTEND_OAUTH_CALLBACK_URL = os.environ.get(
-    "FRONTEND_OAUTH_CALLBACK_URL",
-    "http://localhost:5173/oauth/callback",
-)
+GOOGLE_OAUTH_REDIRECT_URI = os.environ.get("GOOGLE_OAUTH_REDIRECT_URI", "")
+FRONTEND_OAUTH_CALLBACK_URL = os.environ.get("FRONTEND_OAUTH_CALLBACK_URL", "")
 
 
 
@@ -115,11 +109,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME", "medchain"),
-        "USER": os.environ.get("DB_USER", "shops"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "shops_pass"),
-        "HOST": os.environ.get("DB_HOST", "localhost"),
-        "PORT": os.environ.get("DB_PORT", "5432"),
+        "NAME": os.environ["DB_NAME"],
+        "USER": os.environ["DB_USER"],
+        "PASSWORD": os.environ["DB_PASSWORD"],
+        "HOST": os.environ["DB_HOST"],
+        "PORT": os.environ["DB_PORT"],
     }
 }
 
@@ -157,7 +151,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = os.environ.get("STATIC_URL", "/static/")
+MEDIA_URL = os.environ["MEDIA_URL"]
+MEDIA_ROOT = os.environ["MEDIA_ROOT"]
+STORAGES = {
+    "default": {
+        "BACKEND": os.environ["STORAGE_BACKEND"],
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 
 # Email
