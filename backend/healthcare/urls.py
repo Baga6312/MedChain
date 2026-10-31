@@ -18,6 +18,10 @@ from .views import (
     MedicalRecordViewSet,
     PatientViewSet,
     TreatmentEpisodeViewSet,
+    treatment_event_list,
+    treatment_phase_detail,
+    treatment_phase_list,
+    treatment_timeline,
 )
 
 doctor_list = DoctorViewSet.as_view({
@@ -93,6 +97,26 @@ urlpatterns = [
         "treatment-episodes/<int:pk>/",
         treatment_episode_detail,
         name="treatment-episode-detail",
+    ),
+    path(
+        "treatment-episodes/<int:episode_id>/timeline/",
+        treatment_timeline,
+        name="treatment-timeline",
+    ),
+    path(
+        "treatment-episodes/<int:episode_id>/phases/",
+        treatment_phase_list,
+        name="treatment-phase-list",
+    ),
+    path(
+        "treatment-episodes/<int:episode_id>/phases/<int:phase_id>/",
+        treatment_phase_detail,
+        name="treatment-phase-detail",
+    ),
+    path(
+        "treatment-episodes/<int:episode_id>/events/",
+        treatment_event_list,
+        name="treatment-event-list",
     ),
     path("admin/dashboard/", dashboard, name="admin-dashboard"),
     path("admin/users/", users, name="admin-users"),

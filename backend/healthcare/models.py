@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.db import models
 
@@ -180,6 +182,93 @@ class TreatmentEpisode(models.Model):
                 name="one_open_episode_per_patient_doctor",
             ),
         ]
+
+
+class TreatmentPhase(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        ACTIVE = "active", "Active"
+        COMPLETED = "completed", "Completed"
+        FAILED = "failed", "Failed"
+        SKIPPED = "skipped", "Skipped"
+
+    treatment_episode = models.ForeignKey(
+        TreatmentEpisode,
+        on_delete=models.CASCADE,
+        related_name="phases",
+    )
+    sequence_number = models.PositiveIntegerField()
+    name = models.CharField(max_length=150)
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+    summary = models.TextField(blank=True)
+    failure_reason = models.TextField(blank=True)
+    started_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["sequence_number", "created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["treatment_episode", "sequence_number"],
+                name="unique_phase_sequence_per_episode",
+            ),
+        ]
+
+
+class TreatmentEvent(models.Model):
+    class EventType(models.TextChoices):
+        CONSULTATION = "consultation", "Consultation"
+        DIAGNOSIS = "diagnosis", "Diagnosis"
+        PRESCRIPTION = "prescription", "Prescription"
+        TEST = "test", "Test"
+        RESULT = "result", "Result"
+        FOLLOW_UP = "follow_up", "Follow-up"
+        PHASE_FAILED = "phase_failed", "Phase failed"
+        PHASE_COMPLETED = "phase_completed", "Phase completed"
+        NOTE = "note", "Note"
+
+    event_id = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+    )
+    treatment_episode = models.ForeignKey(
+        TreatmentEpisode,
+        on_delete=models.CASCADE,
+        related_name="events",
+    )
+    treatment_phase = models.ForeignKey(
+        TreatmentPhase,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="events",
+    )
+    appointment = models.ForeignKey(
+        Appointment,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="treatment_events",
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="treatment_events",
+    )
+    event_type = models.CharField(max_length=30, choices=EventType.choices)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    result = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
 
 
 class SessionToken(models.Model):

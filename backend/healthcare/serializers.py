@@ -15,7 +15,14 @@ Two changes from the previous version, both required by the views refactor:
 
 from rest_framework import serializers
 
-from .models import Appointment, Doctor, MedicalRecord, Patient
+from .models import (
+    Appointment,
+    Doctor,
+    MedicalRecord,
+    Patient,
+    TreatmentEvent,
+    TreatmentPhase,
+)
 
 
 class DoctorSerializer(serializers.ModelSerializer):
@@ -125,3 +132,49 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
             "title": {"required": True},
             "content": {"required": True},
         }
+
+
+class TreatmentPhaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TreatmentPhase
+        fields = [
+            "id",
+            "sequence_number",
+            "name",
+            "status",
+            "summary",
+            "failure_reason",
+            "started_at",
+            "completed_at",
+            "created_at",
+        ]
+        read_only_fields = [
+            "id",
+            "sequence_number",
+            "started_at",
+            "completed_at",
+            "created_at",
+        ]
+
+
+class TreatmentEventSerializer(serializers.ModelSerializer):
+    author_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TreatmentEvent
+        fields = [
+            "event_id",
+            "treatment_phase",
+            "appointment",
+            "author",
+            "author_name",
+            "event_type",
+            "title",
+            "description",
+            "result",
+            "created_at",
+        ]
+        read_only_fields = ["event_id", "author", "author_name", "created_at"]
+
+    def get_author_name(self, obj):
+        return obj.author.get_full_name() or obj.author.email

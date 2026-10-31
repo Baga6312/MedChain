@@ -1,15 +1,28 @@
+from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
-from rest_framework import status, viewsets
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from .generics.mixins import StrictCrudMixin
-from .models import Appointment, Doctor, MedicalRecord, Patient, TreatmentEpisode, UserProfile
+from .models import (
+    Appointment,
+    Doctor,
+    MedicalRecord,
+    Patient,
+    TreatmentEpisode,
+    TreatmentEvent,
+    TreatmentPhase,
+    UserProfile,
+)
 from .serializers import (
     AppointmentSerializer,
     DoctorSerializer,
     MedicalRecordSerializer,
     PatientSerializer,
+    TreatmentEventSerializer,
+    TreatmentPhaseSerializer,
 )
 
 
@@ -265,3 +278,131 @@ def _episode_data(rows):
         }
         for row in rows
     ]
+
+
+def _timeline_episode(user, episode_id):
+    queryset = TreatmentEpisode.objects.select_related("patient", "doctor")
+    if _is_admin(user):
+        return queryset.filter(pk=episode_id).first()
+    profile = getattr(user, "profile", None)
+    if profile is None:
+        return None
+    if profile.role == UserProfile.Role.PATIENT:
+        return queryset.filter(pk=episode_id, patient__user=user).first()
+    if profile.role == UserProfile.Role.DOCTOR:
+        return queryset.filter(pk=episode_id, doctor__user=user).first()
+    return None
+
+
+def _phase_data(phase):
+    return TreatmentPhaseSerializer(phase).data
+
+
+def _event_data(event):
+    return TreatmentEventSerializer(event).data
+
+
+@api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated])
+def treatment_timeline(request, episode_id):
+    episode = _timeline_episode(request.user, episode_id)
+    if episode is None:
+        return Response({"detail": "Treatment episode not found."}, status=status.HTTP_404_NOT_FOUND)
+    phases = episode.phases.all()
+    events = episode.events.select_related("author").all()
+    return Response({
+        "treatment_episode": episode.id,
+        "phases": [_phase_data(phase) for phase in phases],
+        "events": [_event_data(event) for event in events],
+    })
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
+def treatment_phase_list(request, episode_id):
+    episode = _timeline_episode(request.user, episode_id)
+    if episode is None:
+        return Response({"detail": "Treatment episode not found."}, status=status.HTTP_404_NOT_FOUND)
+    if not _is_admin(request.user) and getattr(getattr(request.user, "profile", None), "role", None) != UserProfile.Role.DOCTOR:
+        return Response({"detail": "Only doctors can create treatment phases."}, status=status.HTTP_403_FORBIDDEN)
+
+    next_sequence = (episode.phases.order_by("-sequence_number").values_list("sequence_number", flat=True).first() or 0) + 1
+    serializer = TreatmentPhaseSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    phase = serializer.save(treatment_episode=episode, sequence_number=next_sequence)
+    return Response(_phase_data(phase), status=status.HTTP_201_CREATED)
+
+
+@api_view(["PATCH"])
+@permission_classes([permissions.IsAuthenticated])
+def treatment_phase_detail(request, episode_id, phase_id):
+    episode = _timeline_episode(request.user, episode_id)
+    if episode is None:
+        return Response({"detail": "Treatment episode not found."}, status=status.HTTP_404_NOT_FOUND)
+    if not _is_admin(request.user) and getattr(getattr(request.user, "profile", None), "role", None) != UserProfile.Role.DOCTOR:
+        return Response({"detail": "Only doctors can update treatment phases."}, status=status.HTTP_403_FORBIDDEN)
+    phase = episode.phases.filter(pk=phase_id).first()
+    if phase is None:
+        return Response({"detail": "Treatment phase not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = TreatmentPhaseSerializer(phase, data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    old_status = phase.status
+    new_status = serializer.validated_data.get("status", phase.status)
+    failure_reason = serializer.validated_data.get("failure_reason", phase.failure_reason)
+    if new_status == TreatmentPhase.Status.FAILED and not failure_reason.strip():
+        return Response(
+            {"failure_reason": "A reason is required when a phase fails."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    now = timezone.now()
+    with transaction.atomic():
+        phase = serializer.save(
+            started_at=now if new_status == TreatmentPhase.Status.ACTIVE and phase.started_at is None else phase.started_at,
+            completed_at=now if new_status in {TreatmentPhase.Status.COMPLETED, TreatmentPhase.Status.FAILED} else phase.completed_at,
+        )
+        if (
+            new_status == TreatmentPhase.Status.FAILED
+            and old_status != TreatmentPhase.Status.FAILED
+            and phase.failure_reason
+        ):
+            TreatmentEvent.objects.create(
+                treatment_episode=episode,
+                treatment_phase=phase,
+                author=request.user,
+                event_type=TreatmentEvent.EventType.PHASE_FAILED,
+                title=f"Phase failed: {phase.name}",
+                description=phase.failure_reason,
+            )
+    return Response(_phase_data(phase))
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
+def treatment_event_list(request, episode_id):
+    episode = _timeline_episode(request.user, episode_id)
+    if episode is None:
+        return Response({"detail": "Treatment episode not found."}, status=status.HTTP_404_NOT_FOUND)
+    role = getattr(getattr(request.user, "profile", None), "role", None)
+    if not _is_admin(request.user) and role not in {UserProfile.Role.DOCTOR, UserProfile.Role.PATIENT}:
+        return Response({"detail": "Only patients and doctors can add timeline events."}, status=status.HTTP_403_FORBIDDEN)
+
+    serializer = TreatmentEventSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    event_type = serializer.validated_data.get("event_type")
+    if role == UserProfile.Role.PATIENT and event_type not in {
+        TreatmentEvent.EventType.NOTE,
+        TreatmentEvent.EventType.RESULT,
+    }:
+        return Response(
+            {"detail": "Patients can only add notes or results."},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+    phase = serializer.validated_data.get("treatment_phase")
+    if phase and phase.treatment_episode_id != episode.id:
+        return Response({"detail": "The phase must belong to this treatment episode."}, status=status.HTTP_400_BAD_REQUEST)
+    appointment = serializer.validated_data.get("appointment")
+    if appointment and appointment.treatment_episode_id != episode.id:
+        return Response({"detail": "The appointment must belong to this treatment episode."}, status=status.HTTP_400_BAD_REQUEST)
+    event = serializer.save(treatment_episode=episode, author=request.user)
+    return Response(_event_data(event), status=status.HTTP_201_CREATED)
