@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 import os
 from pathlib import Path
 
+from .logging_utils import build_logging_config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,6 +27,11 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ["DJANGO_DEBUG"] == "1"
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
+LOG_SERVICE_NAME = os.environ.get("LOG_SERVICE_NAME", "medchain-backend")
+LOG_ENVIRONMENT = os.environ.get("LOG_ENVIRONMENT", "development")
+LOG_FILE_PATH = os.environ.get("LOG_FILE_PATH", "/app/logs/medchain.jsonl")
+LOGGING = build_logging_config(LOG_LEVEL, LOG_ENVIRONMENT, LOG_FILE_PATH)
 
 ALLOWED_HOSTS = [host.strip() for host in os.environ["DJANGO_ALLOWED_HOSTS"].split(",") if host.strip()]
 
@@ -75,6 +82,7 @@ FRONTEND_OAUTH_CALLBACK_URL = os.environ.get("FRONTEND_OAUTH_CALLBACK_URL", "")
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'config.middleware.RequestLoggingMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

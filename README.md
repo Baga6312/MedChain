@@ -69,6 +69,16 @@ Les paramètres sont centralisés dans `.env`. Les secrets destinés à Kubernet
 `ConfigMap`. Le stockage local utilise `STORAGE_BACKEND` et peut être remplacé
 par un backend S3 sans modifier les modèles ni le frontend.
 
+Les logs backend sont émis en JSON sur stdout avec un identifiant de requête
+`X-Request-ID`. Ils peuvent être collectés directement par Fluent Bit,
+Elasticsearch/Kibana ou Datadog. Les variables `LOG_LEVEL`,
+`LOG_SERVICE_NAME` et `LOG_ENVIRONMENT` contrôlent leur classification.
+
+En local, les logs de tous les conteneurs sont stockés par Elasticsearch et
+consultables dans Kibana. Fluent Bit collecte les logs Docker et les envoie
+uniquement au service Elasticsearch local. Les données sont persistées dans le
+volume Docker `elasticsearchdata`. Voir [logging/README.md](logging/README.md).
+
 Vérifier les services :
 
 ```powershell

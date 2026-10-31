@@ -1,4 +1,46 @@
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: ${ELASTICSEARCH_JAVA_OPTS:--Xms512m -Xmx512m}
+    volumes:
+      - elasticsearchdata:/usr/share/elasticsearch/data
+    ports:
+      - "${ELASTICSEARCH_EXTERNAL_PORT}:${ELASTICSEARCH_PORT}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:${ELASTICSEARCH_PORT}/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.3
+    environment:
+      ELASTICSEARCH_HOSTS: http://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}
+      SERVER_PORT: ${KIBANA_PORT}
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "${KIBANA_EXTERNAL_PORT}:${KIBANA_PORT}"
+
+  fluent-bit:
+    image: fluent/fluent-bit:3.1
+    user: root
+    volumes:
+      - ./logging/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+      - ./logging/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf:ro
+      - ./logs:/var/log/medchain:ro
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      LOG_ENVIRONMENT: ${LOG_ENVIRONMENT:?LOG_ENVIRONMENT is required}
+      ELASTICSEARCH_HOST: ${ELASTICSEARCH_HOST:?ELASTICSEARCH_HOST is required}
+      ELASTICSEARCH_PORT: ${ELASTICSEARCH_PORT:?ELASTICSEARCH_PORT is required}
+
   redis:
     image: redis:7-alpine
     command: redis-server --appendonly yes
@@ -34,6 +76,10 @@ services:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY is required}
       DJANGO_DEBUG: ${DJANGO_DEBUG:?DJANGO_DEBUG is required}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?DJANGO_ALLOWED_HOSTS is required}
+      LOG_LEVEL: ${LOG_LEVEL:?LOG_LEVEL is required}
+      LOG_SERVICE_NAME: ${LOG_SERVICE_NAME:?LOG_SERVICE_NAME is required}
+      LOG_ENVIRONMENT: ${LOG_ENVIRONMENT:?LOG_ENVIRONMENT is required}
+      LOG_FILE_PATH: ${LOG_FILE_PATH:-/app/logs/medchain.jsonl}
       DB_NAME: ${DB_NAME:?DB_NAME is required}
       DB_USER: ${DB_USER:?DB_USER is required}
       DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
@@ -60,6 +106,7 @@ services:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
       - media:/app/media
+      - ./logs:/app/logs
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:' + '${BACKEND_PORT}' + '/api/docs/')\""]
       interval: 10s
@@ -68,7 +115,7 @@ services:
     command: >-
       sh -c "python manage.py migrate &&
       python manage.py seed &&
-      gunicorn config.wsgi:application --bind 0.0.0.0:${BACKEND_PORT} --worker-tmp-dir /dev/shm"
+      gunicorn config.wsgi:application --bind 0.0.0.0:${BACKEND_PORT} --worker-tmp-dir /dev/shm --access-logfile - --error-logfile -"
 
   frontend:
     build:
@@ -100,3 +147,4 @@ volumes:
   pgdata:
   redisdata:
   media:
+  elasticsearchdata:
