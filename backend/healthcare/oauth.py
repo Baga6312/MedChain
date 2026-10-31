@@ -15,6 +15,7 @@ from google.oauth2 import id_token
 from django.utils import timezone
 from datetime import timedelta
 
+from .auth_views import _ensure_role_record
 from .models import SessionToken
 
 
@@ -118,6 +119,8 @@ def google_callback(request):
     if created:
         user.set_unusable_password()
         user.save(update_fields=["password"])
+
+    _ensure_role_record(user)
 
     raw_token = secrets.token_urlsafe(32)
     SessionToken.objects.create(

@@ -17,6 +17,7 @@ from .views import (
     DoctorViewSet,
     MedicalRecordViewSet,
     PatientViewSet,
+    TreatmentEpisodeViewSet,
 )
 
 doctor_list = DoctorViewSet.as_view({
@@ -63,6 +64,16 @@ record_detail = MedicalRecordViewSet.as_view({
     "delete": "destroy",
 })
 
+treatment_episode_list = TreatmentEpisodeViewSet.as_view({
+    "get": "list",
+    "post": "create",
+})
+treatment_episode_detail = TreatmentEpisodeViewSet.as_view({
+    "get": "retrieve",
+    "patch": "partial_update",
+    "delete": "destroy",
+})
+
 urlpatterns = [
     path("auth/login/", login, name="login"),
     path("auth/register/", register, name="register"),
@@ -77,6 +88,12 @@ urlpatterns = [
     path("doctors/<int:pk>/", doctor_detail, name="doctor-detail"),
     path("medical-records/", record_list, name="medical-record-list"),
     path("medical-records/<int:pk>/", record_detail, name="medical-record-detail"),
+    path("treatment-episodes/", treatment_episode_list, name="treatment-episode-list"),
+    path(
+        "treatment-episodes/<int:pk>/",
+        treatment_episode_detail,
+        name="treatment-episode-detail",
+    ),
     path("admin/dashboard/", dashboard, name="admin-dashboard"),
     path("admin/users/", users, name="admin-users"),
     path("admin/users/<int:user_id>/force-logout/", force_logout, name="admin-force-logout"),

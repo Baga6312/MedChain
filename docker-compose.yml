@@ -80,7 +80,7 @@ services:
       - frontend
       - backend
     ports:
-      - "5173:80"   # point d'entrée unique : http://localhost:5173
+      - "80:80"   # point d'entrée unique : http://localhost:5173
 
 volumes:
   pgdata:

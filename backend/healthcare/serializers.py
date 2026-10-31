@@ -44,8 +44,8 @@ class PatientSerializer(serializers.ModelSerializer):
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = ["id", "patient", "doctor", "date", "notes", "status"]
-        read_only_fields = ["id"]
+        fields = ["id", "patient", "doctor", "treatment_episode", "date", "notes", "status"]
+        read_only_fields = ["id", "treatment_episode"]
         extra_kwargs = {
             "notes": {"required": True, "allow_blank": False},
         }
@@ -110,8 +110,16 @@ class AppointmentSerializer(serializers.ModelSerializer):
 class MedicalRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalRecord
-        fields = ["id", "patient", "title", "content", "created_at", "updated_at"]
-        read_only_fields = ["id", "created_at", "updated_at"]
+        fields = [
+            "id",
+            "patient",
+            "treatment_episode",
+            "title",
+            "content",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "treatment_episode", "created_at", "updated_at"]
         extra_kwargs = {
             "patient": {"required": True},
             "title": {"required": True},

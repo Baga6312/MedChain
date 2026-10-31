@@ -6,8 +6,15 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import OAuthCallbackPage from './pages/OAuthCallbackPage';
 import AdminDashboard from './pages/AdminDashboard';
+import RoleDashboard from './pages/RoleDashboard';
 import { NotifyProvider } from './context/NotifyContext';
 import { AuthProvider } from './context/AuthContext';
+import { useAuth } from './context/AuthContext';
+
+function HomeRedirect() {
+  const { isAdmin } = useAuth();
+  return <Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />;
+}
 
 export default function App() {
   return (
@@ -19,7 +26,8 @@ export default function App() {
           <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<AppShell />}>
-              <Route path="/" element={<Navigate to="/patients" replace />} />
+              <Route path="/" element={<HomeRedirect />} />
+              <Route path="/dashboard" element={<RoleDashboard />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/:resource" element={<ResourcePage />} />
             </Route>

@@ -17,6 +17,7 @@ from .models import (
     SecurityAlert,
     UserProfile,
 )
+from .profile_cache import get_profile, invalidate_profile
 
 
 def is_admin(user):
@@ -43,13 +44,9 @@ def audit(request, action, detail="", target_type="", target_id="", result=Audit
 
 
 def user_data(user):
-    profile = getattr(user, "profile", None)
+    data = get_profile(user)
     return {
-        "id": user.id,
-        "email": user.email or user.username,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "role": profile.role if profile else ("admin" if user.is_staff else "patient"),
+        **data,
         "is_active": user.is_active,
         "is_staff": user.is_staff,
         "last_login": user.last_login,
@@ -171,13 +168,22 @@ def users(request):
         changed.append("status")
     if "role" in request.data:
         role = request.data["role"]
-        if role not in UserProfile.Role.values:
-            return Response({"detail": "Invalid role."}, status=400)
+        if role not in (UserProfile.Role.PATIENT, UserProfile.Role.DOCTOR):
+            return Response(
+                {"detail": "Only patient and doctor roles can be assigned here."},
+                status=400,
+            )
+        if is_admin(target):
+            return Response(
+                {"detail": "Administrator roles cannot be changed here."},
+                status=400,
+            )
         with transaction.atomic():
             profile, _ = UserProfile.objects.get_or_create(user=target)
             profile.role = role
             profile.save(update_fields=["role"])
             sync_role_record(target, role)
+            invalidate_profile(target.pk)
         changed.append("role")
     target.save(update_fields=["is_active"])
     audit(request, "admin_user_updated", ", ".join(changed), "user", target.pk)

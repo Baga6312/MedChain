@@ -141,10 +141,14 @@ export default function AdminDashboard() {
                   <tr key={user.id}>
                     <td>{user.first_name} {user.last_name}<br /><small>{user.email}</small></td>
                     <td>
-                      <select value={user.role} onChange={(event) => changeRole(user, event.target.value)}>
+                      <select
+                        value={user.role}
+                        disabled={user.role === 'admin'}
+                        onChange={(event) => changeRole(user, event.target.value)}
+                      >
+                        {user.role === 'admin' && <option value="admin">Administrateur</option>}
                         <option value="patient">Patient</option>
                         <option value="doctor">Médecin</option>
-                        <option value="admin">Administrateur</option>
                       </select>
                     </td>
                     <td>{new Date(user.date_joined).toLocaleDateString('fr-FR')}</td>

@@ -112,6 +112,13 @@ class Appointment(models.Model):
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="appointments")
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name="appointments")
+    treatment_episode = models.ForeignKey(
+        "TreatmentEpisode",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="appointments",
+    )
     date = models.DateTimeField()
     notes = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
@@ -121,10 +128,58 @@ class Appointment(models.Model):
     
 class MedicalRecord(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="medical_records")
+    treatment_episode = models.ForeignKey(
+        "TreatmentEpisode",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="medical_records",
+    )
     title = models.CharField(max_length=200)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class TreatmentEpisode(models.Model):
+    class Status(models.TextChoices):
+        REQUESTED = "requested", "Requested"
+        ACTIVE = "active", "Active"
+        ABANDONED = "abandoned", "Abandoned"
+        COMPLETED = "completed", "Completed"
+
+    patient = models.ForeignKey(
+        Patient,
+        on_delete=models.CASCADE,
+        related_name="treatment_episodes",
+    )
+    doctor = models.ForeignKey(
+        Doctor,
+        on_delete=models.CASCADE,
+        related_name="treatment_episodes",
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.REQUESTED,
+    )
+    reason = models.CharField(max_length=255, blank=True)
+    notes = models.TextField(blank=True)
+    started_at = models.DateTimeField(null=True, blank=True)
+    abandoned_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["patient", "doctor"],
+                condition=models.Q(status__in=["requested", "active"]),
+                name="one_open_episode_per_patient_doctor",
+            ),
+        ]
 
 
 class SessionToken(models.Model):

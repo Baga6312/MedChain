@@ -8,15 +8,19 @@ export const useAuth = () => useContext(Ctx);
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(tokens.get());
   const [user, setUser] = useState(null);
+  const [authReady, setAuthReady] = useState(!token);
 
   useEffect(() => {
     if (!token) {
       setUser(null);
+      setAuthReady(true);
       return;
     }
+    setAuthReady(false);
     request('/auth/me/')
       .then(setUser)
-      .catch(() => setUser(null));
+      .catch(() => setUser(null))
+      .finally(() => setAuthReady(true));
   }, [token]);
 
   const value = {
@@ -36,7 +40,7 @@ export function AuthProvider({ children }) {
       setUser(null);
     },
   };
-  return <Ctx.Provider value={{ ...value, user, isAdmin: user?.role === 'admin' || user?.is_staff }}>
+  return <Ctx.Provider value={{ ...value, user, authReady, isAdmin: user?.role === 'admin' || user?.is_staff }}>
     {children}
   </Ctx.Provider>;
 }

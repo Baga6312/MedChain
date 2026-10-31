@@ -31,6 +31,23 @@ def _error(detail, status=400):
     return JsonResponse({"detail": detail}, status=status)
 
 
+def _ensure_role_record(user):
+    profile, profile_created = UserProfile.objects.get_or_create(
+        user=user,
+        defaults={"role": UserProfile.Role.PATIENT},
+    )
+    if profile_created or profile.role == UserProfile.Role.PATIENT:
+        Patient.objects.get_or_create(
+            user=user,
+            defaults={
+                "name": f"{user.first_name} {user.last_name}".strip()
+                or user.email
+                or user.username,
+                "phone": profile.phone,
+            },
+        )
+
+
 @csrf_exempt
 @require_POST
 def register(request):
@@ -90,4 +107,5 @@ def login(request):
     if user is None or not user.is_active:
         return _error("Invalid email or password.", status=401)
 
+    _ensure_role_record(user)
     return JsonResponse({"access": _issue_token(user)})

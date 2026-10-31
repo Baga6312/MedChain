@@ -1,11 +1,11 @@
-import { LockKeyhole, ShieldCheck } from 'lucide-react';
+import { LockKeyhole, ShieldCheck, UserRound } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { resources } from '../../config/resources';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Sidebar() {
   const { pathname } = useLocation();
-  const { logout, isAdmin } = useAuth();
+  const { logout, isAdmin, user } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -18,6 +18,15 @@ export default function Sidebar() {
         </div>
       </div>
       <nav className="side-nav">
+        {!isAdmin && (
+          <button
+            className={pathname === '/dashboard' ? 'active' : ''}
+            onClick={() => navigate('/dashboard')}
+          >
+            <UserRound size={18} />
+            <span>Mon espace</span>
+          </button>
+        )}
         {isAdmin && (
           <button
             className={pathname === '/admin' ? 'active' : ''}
@@ -27,7 +36,14 @@ export default function Sidebar() {
             <span>Administration</span>
           </button>
         )}
-        {Object.entries(resources).map(([key, { label, icon: Icon }]) => (
+        {Object.entries(resources)
+          .filter(([key]) => {
+            if (isAdmin) return true;
+            if (user?.role === 'patient') return ['doctors', 'appointments', 'medical-records'].includes(key);
+            if (user?.role === 'doctor') return ['patients', 'appointments', 'medical-records'].includes(key);
+            return false;
+          })
+          .map(([key, { label, icon: Icon }]) => (
           <button
             key={key}
             className={pathname === `/${key}` ? 'active' : ''}
@@ -36,7 +52,7 @@ export default function Sidebar() {
             <Icon size={18} />
             <span>{label}</span>
           </button>
-        ))}
+          ))}
       </nav>
       <button className="quiet-button" onClick={logout}>Déconnexion</button>
     </aside>
