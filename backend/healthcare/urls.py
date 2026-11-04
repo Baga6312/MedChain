@@ -11,7 +11,7 @@ from .admin_views import (
     update_profile,
     users,
 )
-from .auth_views import login, register
+from .auth_views import google_mobile_login, login, register
 from .oauth import google_callback, google_login
 from .views import (
     AppointmentViewSet,
@@ -82,6 +82,7 @@ treatment_episode_detail = TreatmentEpisodeViewSet.as_view({
 urlpatterns = [
     path("auth/login/", login, name="login"),
     path("auth/register/", register, name="register"),
+    path("auth/google/mobile/", google_mobile_login, name="google-mobile-login"),
     path("auth/me/", current_user, name="current-user"),
     path("auth/profile/", update_profile, name="update-profile"),
     path("auth/google/login/", google_login, name="google-login"),

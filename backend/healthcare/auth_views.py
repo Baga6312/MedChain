@@ -109,3 +109,51 @@ def login(request):
 
     _ensure_role_record(user)
     return JsonResponse({"access": _issue_token(user)})
+
+
+@csrf_exempt
+@require_POST
+def google_mobile_login(request):
+    try:
+        data = json.loads(request.body)
+    except (TypeError, ValueError):
+        return _error("A valid JSON body is required.")
+
+    id_token_value = data.get("id_token")
+    if not isinstance(id_token_value, str) or not id_token_value:
+        return _error("A Google ID token is required.")
+
+    from google.auth.transport import requests
+    from google.oauth2 import id_token
+
+    try:
+        claims = id_token.verify_oauth2_token(
+            id_token_value,
+            requests.Request(),
+            settings.GOOGLE_OAUTH_CLIENT_ID,
+        )
+    except ValueError:
+        return _error("Google identity verification failed.", status=401)
+
+    email = claims.get("email")
+    if not email or not claims.get("email_verified"):
+        return _error("A verified Google email is required.", status=401)
+
+    User = get_user_model()
+    user, created = User.objects.get_or_create(
+        username=email,
+        defaults={
+            "email": email,
+            "first_name": claims.get("given_name", ""),
+            "last_name": claims.get("family_name", ""),
+        },
+    )
+    if created:
+        user.set_unusable_password()
+        user.save(update_fields=["password"])
+
+    _ensure_role_record(user)
+    from .oauth import _save_google_avatar
+
+    _save_google_avatar(user, claims.get("picture"))
+    return JsonResponse({"access": _issue_token(user)})

@@ -8,6 +8,11 @@ from django.conf import settings
 logger = logging.getLogger("medchain.http")
 
 
+def _request_user_id(request):
+    user = getattr(request, "user", None)
+    return user.pk if user is not None and user.is_authenticated else None
+
+
 class RequestLoggingMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -28,7 +33,7 @@ class RequestLoggingMiddleware:
                     "method": request.method,
                     "path": request.path,
                     "duration_ms": round((time.monotonic() - started) * 1000, 2),
-                    "user_id": request.user.pk if request.user.is_authenticated else None,
+                    "user_id": _request_user_id(request),
                 },
             )
             raise
@@ -47,7 +52,7 @@ class RequestLoggingMiddleware:
                 "path": request.path,
                 "status": response.status_code,
                 "duration_ms": round((time.monotonic() - started) * 1000, 2),
-                "user_id": request.user.pk if request.user.is_authenticated else None,
+                "user_id": _request_user_id(request),
             },
         )
         return response
