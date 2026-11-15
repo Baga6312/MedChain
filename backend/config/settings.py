@@ -63,6 +63,9 @@ REST_FRAMEWORK = {
     ],
 }
 
+
+MEDCHAIN_MASTER_KEY = os.environ.get("MEDCHAIN_MASTER_KEY", "")
+MEDCHAIN_KEY_ID = os.environ.get("MEDCHAIN_KEY_ID", "env-v1")
 REDIS_URL = os.environ["REDIS_URL"]
 SESSION_TOKEN_LIFETIME_SECONDS = 60 * 60
 

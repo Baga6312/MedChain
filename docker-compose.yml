@@ -73,6 +73,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
+      MEDCHAIN_MASTER_KEY: ${MEDCHAIN_MASTER_KEY:?MEDCHAIN_MASTER_KEY is required}
+      MEDCHAIN_KEY_ID: ${MEDCHAIN_KEY_ID:-env-v1}
+      BLOCKCHAIN_DIFFICULTY: ${BLOCKCHAIN_DIFFICULTY:-3}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY is required}
       DJANGO_DEBUG: ${DJANGO_DEBUG:?DJANGO_DEBUG is required}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?DJANGO_ALLOWED_HOSTS is required}

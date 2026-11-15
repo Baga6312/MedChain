@@ -354,3 +354,11 @@ class Block(models.Model):
 
     def delete(self, *args, **kwargs):
         raise ImmutableBlockError("Blocks cannot be deleted.")
+
+class EpisodeKey(models.Model):
+    treatment_episode = models.OneToOneField(
+        TreatmentEpisode, on_delete=models.PROTECT, related_name="key"
+    )
+    wrapped_dek = models.BinaryField()
+    kek_id = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
