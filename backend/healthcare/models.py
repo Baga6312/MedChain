@@ -295,3 +295,62 @@ class SessionToken(models.Model):
             models.Index(fields=["user", "expires_at"]),
             models.Index(fields=["expires_at"]),
         ]
+
+class ImmutableBlockError(Exception):
+    pass
+
+
+class Block(models.Model):
+    class Chain(models.TextChoices):
+        USER = "user", "User chain"
+        DOCTOR = "doctor", "Doctor chain"
+
+    treatment_episode = models.ForeignKey(
+        TreatmentEpisode, on_delete=models.PROTECT, related_name="blocks"
+    )
+    chain = models.CharField(max_length=10, choices=Chain.choices)
+
+    # header
+    index = models.PositiveIntegerField()
+    prev_hash = models.CharField(max_length=64)
+    merkle_root = models.CharField(max_length=64)
+    timestamp = models.BigIntegerField()
+    nonce = models.BigIntegerField(default=0)
+    block_hash = models.CharField(max_length=64, unique=True)
+
+    # body (event is null only for the genesis block)
+    event = models.OneToOneField(
+        TreatmentEvent, null=True, blank=True,
+        on_delete=models.PROTECT, related_name="block",
+    )
+    tx_hash = models.CharField(max_length=64)
+    signature = models.TextField(blank=True)
+    payload_enc = models.BinaryField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["treatment_episode_id", "chain", "index"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["treatment_episode", "chain", "index"],
+                name="unique_block_index_per_chain",
+            ),
+        ]
+
+    @property
+    def chain_id(self):
+        return f"{self.treatment_episode_id}:{self.chain}"
+
+    def compute_hash(self):
+        return ledger.header_hash(
+            chain_id=self.chain_id, index=self.index, prev_hash=self.prev_hash,
+            merkle_root=self.merkle_root, timestamp=self.timestamp, nonce=self.nonce,
+        )
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            raise ImmutableBlockError("Blocks cannot be modified.")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ImmutableBlockError("Blocks cannot be deleted.")

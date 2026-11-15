@@ -332,7 +332,6 @@ def treatment_phase_list(request, episode_id):
     phase = serializer.save(treatment_episode=episode, sequence_number=next_sequence)
     return Response(_phase_data(phase), status=status.HTTP_201_CREATED)
 
-
 @api_view(["PATCH"])
 @permission_classes([permissions.IsAuthenticated])
 def treatment_phase_detail(request, episode_id, phase_id):
@@ -350,22 +349,10 @@ def treatment_phase_detail(request, episode_id, phase_id):
     old_status = phase.status
     new_status = serializer.validated_data.get("status", phase.status)
     failure_reason = serializer.validated_data.get("failure_reason", phase.failure_reason)
-    if new_status != old_status and new_status in {
-        TreatmentPhase.Status.FAILED,
-        TreatmentPhase.Status.COMPLETED,
-    }:
-        failed = new_status == TreatmentPhase.Status.FAILED
-        TreatmentEvent.objects.create(
-            treatment_episode=episode,
-            treatment_phase=phase,
-            author=request.user,
-            event_type=(
-                TreatmentEvent.EventType.PHASE_FAILED
-                if failed
-                else TreatmentEvent.EventType.PHASE_COMPLETED
-            ),
-            title=f"Phase {'failed' if failed else 'completed'}: {phase.name}",
-            description=(phase.failure_reason if failed else phase.summary) or "-",
+    if new_status == TreatmentPhase.Status.FAILED and not failure_reason.strip():
+        return Response(
+            {"failure_reason": "A reason is required when a phase fails."},
+            status=status.HTTP_400_BAD_REQUEST,
         )
     now = timezone.now()
     with transaction.atomic():
@@ -373,21 +360,24 @@ def treatment_phase_detail(request, episode_id, phase_id):
             started_at=now if new_status == TreatmentPhase.Status.ACTIVE and phase.started_at is None else phase.started_at,
             completed_at=now if new_status in {TreatmentPhase.Status.COMPLETED, TreatmentPhase.Status.FAILED} else phase.completed_at,
         )
-        if (
-            new_status == TreatmentPhase.Status.FAILED
-            and old_status != TreatmentPhase.Status.FAILED
-            and phase.failure_reason
-        ):
+        if new_status != old_status and new_status in {
+            TreatmentPhase.Status.FAILED,
+            TreatmentPhase.Status.COMPLETED,
+        }:
+            failed = new_status == TreatmentPhase.Status.FAILED
             TreatmentEvent.objects.create(
                 treatment_episode=episode,
                 treatment_phase=phase,
                 author=request.user,
-                event_type=TreatmentEvent.EventType.PHASE_FAILED,
-                title=f"Phase failed: {phase.name}",
-                description=phase.failure_reason,
+                event_type=(
+                    TreatmentEvent.EventType.PHASE_FAILED
+                    if failed
+                    else TreatmentEvent.EventType.PHASE_COMPLETED
+                ),
+                title=f"Phase {'failed' if failed else 'completed'}: {phase.name}",
+                description=(phase.failure_reason if failed else phase.summary) or "-",
             )
     return Response(_phase_data(phase))
-
 
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated])
