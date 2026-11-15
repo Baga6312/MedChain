@@ -1,5 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom';
-import CrudPage from '../components/crud/crudPage';
+import CrudPage from '../components/crud/CrudPage';
 import { resources } from '../config/resources';
 import { useNotify } from '../context/NotifyContext';
 

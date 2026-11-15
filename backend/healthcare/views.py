@@ -1,13 +1,18 @@
 from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
+from requests.exceptions import ConnectionError as RequestsConnectionError
+from requests.exceptions import Timeout
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
+from .blockchain import anchoring, chain
 from .generics.mixins import StrictCrudMixin
 from .models import (
     Appointment,
+    Anchor,
+    Block,
     Doctor,
     MedicalRecord,
     Patient,
@@ -302,6 +307,73 @@ def _event_data(event):
     return TreatmentEventSerializer(event).data
 
 
+def _integrity_data(episode):
+    chains = []
+    all_errors = []
+    verification_available = True
+    try:
+        anchor_errors = anchoring.verify_anchors(episode)
+    except (OSError, RequestsConnectionError, Timeout, anchoring.TransactionNotFound) as error:
+        verification_available = False
+        anchor_errors = [f"Blockchain verification unavailable: {error}"]
+    for chain_name in Block.Chain.values:
+        blocks = list(
+            Block.objects.filter(treatment_episode=episode, chain=chain_name)
+            .order_by("-index")
+        )
+        latest = blocks[0] if blocks else None
+        anchor = (
+            Anchor.objects.filter(treatment_episode=episode, chain=chain_name)
+            .order_by("-block_index", "-created_at")
+            .first()
+        )
+        errors = chain.verify_chain(episode, chain_name)
+        errors += anchor_errors
+        chain_errors = [
+            error for error in errors
+            if error.startswith(f"{chain_name}:")
+            or not error.startswith(("user:", "doctor:"))
+        ]
+        all_errors.extend(chain_errors)
+        chains.append({
+            "name": chain_name,
+            "label": "Patient chain" if chain_name == Block.Chain.USER else "Doctor chain",
+            "block_count": len(blocks),
+            "latest_block": {
+                "index": latest.index,
+                "hash": latest.block_hash,
+                "prev_hash": latest.prev_hash,
+                "merkle_root": latest.merkle_root,
+                "timestamp": latest.timestamp,
+                "nonce": latest.nonce,
+            } if latest else None,
+            "anchor": {
+                "block_index": anchor.block_index,
+                "block_hash": anchor.block_hash,
+                "tx_hash": anchor.tx_hash,
+                "eth_block": anchor.eth_block,
+                "created_at": anchor.created_at,
+            } if anchor else None,
+            "errors": chain_errors,
+        })
+
+    has_events = any(item["block_count"] > 1 for item in chains)
+    has_unanchored_events = any(
+        item["block_count"] > 1 and item["anchor"] is None for item in chains
+    )
+    status_value = "verified" if (
+        verification_available
+        and has_events
+        and not has_unanchored_events
+        and not all_errors
+    ) else ("unavailable" if not verification_available else "pending")
+    return {
+        "status": status_value,
+        "errors": all_errors,
+        "chains": chains,
+    }
+
+
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
 def treatment_timeline(request, episode_id):
@@ -314,7 +386,18 @@ def treatment_timeline(request, episode_id):
         "treatment_episode": episode.id,
         "phases": [_phase_data(phase) for phase in phases],
         "events": [_event_data(event) for event in events],
+        "integrity": _integrity_data(episode),
     })
+
+
+@api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated])
+def treatment_integrity(request, episode_id):
+    episode = _timeline_episode(request.user, episode_id)
+    if episode is None:
+        return Response({"detail": "Treatment episode not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response(_integrity_data(episode))
 
 
 @api_view(["POST"])
@@ -420,5 +503,7 @@ def treatment_event_list(request, episode_id):
     appointment = serializer.validated_data.get("appointment")
     if appointment and appointment.treatment_episode_id != episode.id:
         return Response({"detail": "The appointment must belong to this treatment episode."}, status=status.HTTP_400_BAD_REQUEST)
-    event = serializer.save(treatment_episode=episode, author=request.user)
+    
+    with transaction.atomic():
+        event = serializer.save(treatment_episode=episode, author=request.user)
     return Response(_event_data(event), status=status.HTTP_201_CREATED)

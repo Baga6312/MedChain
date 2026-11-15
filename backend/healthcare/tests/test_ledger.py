@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 
-from . import ledger
+from ..blockchain import ledger
 
 
 class LedgerTests(SimpleTestCase):

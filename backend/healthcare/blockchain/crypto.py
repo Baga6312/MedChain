@@ -10,7 +10,7 @@ VERSION = b"\x01"
 
 
 def _dek(episode, create):
-    from .models import EpisodeKey
+    from ..models import EpisodeKey
 
     provider = get_key_provider()
     row = EpisodeKey.objects.filter(treatment_episode=episode).first()

@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
 
-from .models import SessionToken
+from ..models import SessionToken
 
 
 logger = logging.getLogger(__name__)

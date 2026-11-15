@@ -17,8 +17,8 @@ from google.oauth2 import id_token
 from django.utils import timezone
 from datetime import timedelta
 
-from .auth_views import _ensure_role_record
-from .models import SessionToken, UserProfile
+from .views import _ensure_role_record
+from ..models import SessionToken, UserProfile
 from .profile_cache import invalidate_profile
 
 

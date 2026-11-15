@@ -81,6 +81,23 @@
 .search-field { display: flex; align-items: center; gap: 7px; border: 1px solid var(--line); border-radius: 5px; padding: 0 9px; color: var(--muted); }
 .search-field input { border: 0; outline: 0; width: 150px; min-height: 34px; font-size: .72rem; }
 .form-hint { color: var(--muted); font-size: .72rem; line-height: 1.5; }
+.integrity-summary { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; margin-bottom: 18px; border: 1px solid; border-radius: 7px; }
+.integrity-summary.verified { color: var(--success); background: var(--success-bg); border-color: #bbf7d0; }
+.integrity-summary.pending { color: var(--warning); background: var(--warning-bg); border-color: #fde68a; }
+.integrity-summary.unavailable { color: var(--danger); background: var(--danger-bg); border-color: #fecdd3; }
+.integrity-summary-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.integrity-summary strong, .integrity-summary small { display: block; }
+.integrity-summary strong { font-size: .75rem; }
+.integrity-summary small { margin-top: 3px; color: var(--muted); font-size: .68rem; }
+.integrity-overlay { position: fixed; inset: 0; z-index: 40; display: flex; justify-content: flex-end; background: rgba(15, 23, 42, .35); }
+.integrity-drawer { width: min(440px, 100%); height: 100%; overflow-y: auto; padding: 28px 24px; background: var(--panel); box-shadow: -10px 0 30px rgba(15, 23, 42, .14); }
+.integrity-chain { padding: 16px 0; border-top: 1px solid var(--line); }
+.integrity-chain-heading { display: flex; justify-content: space-between; gap: 12px; color: var(--petrol); font-size: .8rem; }
+.integrity-chain-heading span { color: var(--muted); font-size: .7rem; }
+.integrity-details { display: grid; grid-template-columns: 1fr 1.25fr; gap: 9px 14px; margin: 15px 0 0; font-size: .72rem; }
+.integrity-details dt { color: var(--muted); }
+.integrity-details dd { margin: 0; color: var(--ink); text-align: right; overflow-wrap: anywhere; }
+.integrity-error { display: flex; gap: 7px; align-items: flex-start; margin-top: 14px; color: var(--danger); font-size: .7rem; }
 @media (max-width: 900px) {
   .metrics-grid.four { grid-template-columns: repeat(2, 1fr); }
   .admin-grid { grid-template-columns: 1fr; }

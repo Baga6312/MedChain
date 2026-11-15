@@ -4,7 +4,7 @@ import logging
 import redis
 from django.conf import settings
 
-from .models import UserProfile
+from ..models import UserProfile
 
 
 logger = logging.getLogger(__name__)

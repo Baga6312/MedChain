@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, Circle, Flag, UserRound } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, Circle, Flag, Link2, ShieldAlert, ShieldCheck, UserRound } from 'lucide-react';
+import IntegrityDrawer from '../components/treatment/IntegrityDrawer';
 import { useAuth } from '../context/AuthContext';
 import { request } from '../services/http';
 import { useNotify } from '../context/NotifyContext';
@@ -29,6 +30,12 @@ const eventLabels = {
   note: 'Note',
 };
 
+const integrityLabels = {
+  verified: 'Enregistrement vérifié',
+  pending: 'Vérification en attente',
+  unavailable: 'Vérification indisponible',
+};
+
 export default function RoleDashboard() {
   const { user, refreshUser } = useAuth();
   const notify = useNotify();
@@ -43,6 +50,8 @@ export default function RoleDashboard() {
   const [eventData, setEventData] = useState({ title: '', description: '', result: '', event_type: 'note', treatment_phase: '' });
   const [profileData, setProfileData] = useState({ first_name: user.first_name || '', last_name: user.last_name || '', phone: user.phone || '', address: user.address || '', avatar: null });
   const [profileSaving, setProfileSaving] = useState(false);
+  const [integrity, setIntegrity] = useState({});
+  const [integrityEpisode, setIntegrityEpisode] = useState(null);
 
   const load = useCallback(async () => {
     try {
@@ -118,6 +127,15 @@ export default function RoleDashboard() {
         try {
           const timeline = await request(`/treatment-episodes/${id}/timeline/`);
           setTimelines((value) => ({ ...value, [id]: timeline }));
+          setIntegrity((value) => ({ ...value, [id]: timeline.integrity }));
+        } catch (requestError) {
+          notify(requestError.message, 'danger');
+        }
+      }
+      if (!integrity[id]) {
+        try {
+          const integrityData = await request(`/treatment-episodes/${id}/integrity/`);
+          setIntegrity((value) => ({ ...value, [id]: integrityData }));
         } catch (requestError) {
           notify(requestError.message, 'danger');
         }
@@ -132,6 +150,7 @@ export default function RoleDashboard() {
         setPhaseData({ name: '', summary: '' });
         const timeline = await request(`/treatment-episodes/${episodeId}/timeline/`);
         setTimelines((value) => ({ ...value, [episodeId]: timeline }));
+        setIntegrity((value) => ({ ...value, [episodeId]: timeline.integrity }));
       } catch (requestError) {
         notify(requestError.message, 'danger');
       }
@@ -148,6 +167,7 @@ export default function RoleDashboard() {
         setEventData({ title: '', description: '', result: '', event_type: 'note', treatment_phase: '' });
         const timeline = await request(`/treatment-episodes/${episodeId}/timeline/`);
         setTimelines((value) => ({ ...value, [episodeId]: timeline }));
+        setIntegrity((value) => ({ ...value, [episodeId]: timeline.integrity }));
       } catch (requestError) {
         notify(requestError.message, 'danger');
     }
@@ -164,6 +184,7 @@ export default function RoleDashboard() {
       notify('Phase marquée comme échouée.');
       const timeline = await request(`/treatment-episodes/${episodeId}/timeline/`);
       setTimelines((value) => ({ ...value, [episodeId]: timeline }));
+      setIntegrity((value) => ({ ...value, [episodeId]: timeline.integrity }));
     } catch (requestError) {
       notify(requestError.message, 'danger');
     }
@@ -258,6 +279,31 @@ export default function RoleDashboard() {
               </div>
               {expandedEpisode === episode.id && timelines[episode.id] && (
                 <div className="treatment-timeline">
+                  {(() => {
+                    const integrityData = integrity[episode.id] || timelines[episode.id].integrity || {
+                      status: 'pending',
+                      errors: [],
+                      chains: [],
+                    };
+                    return (
+                    <div className={`integrity-summary ${integrityData.status}`}>
+                      <div className="integrity-summary-main">
+                        {integrityData.status === 'verified' ? <ShieldCheck size={18} /> : <ShieldAlert size={18} />}
+                        <div>
+                          <strong>{integrityLabels[integrityData.status]}</strong>
+                          <small>
+                            {integrityData.status === 'verified'
+                              ? 'Les blocs et les ancrages blockchain correspondent.'
+                              : integrityData.errors[0] || 'Les données sont conservées, mais nécessitent encore une vérification.'}
+                          </small>
+                        </div>
+                      </div>
+                      <button className="secondary-button" type="button" disabled={!integrity[episode.id]} onClick={() => setIntegrityEpisode(episode.id)}>
+                        <Link2 size={14} /> Détails
+                      </button>
+                    </div>
+                    );
+                  })()}
                   {timelines[episode.id].phases.length === 0 && <p className="timeline-empty">Aucune phase pour le moment.</p>}
                   {timelines[episode.id].phases.length > 0 && (
                     <>
@@ -334,6 +380,9 @@ export default function RoleDashboard() {
           ))}
         </div>
       </section>
+      {integrityEpisode && integrity[integrityEpisode] && (
+        <IntegrityDrawer data={integrity[integrityEpisode]} onClose={() => setIntegrityEpisode(null)} />
+      )}
     </>
   );
 }

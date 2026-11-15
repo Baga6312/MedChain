@@ -2,7 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.db import models
-from . import ledger
+from .blockchain import ledger
 
 
 class UserProfile(models.Model):
@@ -362,3 +362,15 @@ class EpisodeKey(models.Model):
     wrapped_dek = models.BinaryField()
     kek_id = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Anchor(models.Model):
+    treatment_episode = models.ForeignKey(TreatmentEpisode, on_delete=models.PROTECT, related_name="anchors")
+    chain = models.CharField(max_length=10, choices=Block.Chain.choices)
+    block_index = models.PositiveIntegerField()
+    block_hash = models.CharField(max_length=64)
+    tx_hash = models.CharField(max_length=66)
+    eth_block = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]

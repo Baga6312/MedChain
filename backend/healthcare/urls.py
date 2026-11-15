@@ -11,8 +11,8 @@ from .admin_views import (
     update_profile,
     users,
 )
-from .auth_views import google_mobile_login, login, register
-from .oauth import google_callback, google_login
+from .auth.oauth import google_callback, google_login
+from .auth.views import google_mobile_login, login, register
 from .views import (
     AppointmentViewSet,
     DoctorViewSet,
@@ -22,6 +22,7 @@ from .views import (
     treatment_event_list,
     treatment_phase_detail,
     treatment_phase_list,
+    treatment_integrity,
     treatment_timeline,
 )
 
@@ -105,6 +106,11 @@ urlpatterns = [
         "treatment-episodes/<int:episode_id>/timeline/",
         treatment_timeline,
         name="treatment-timeline",
+    ),
+    path(
+        "treatment-episodes/<int:episode_id>/integrity/",
+        treatment_integrity,
+        name="treatment-integrity",
     ),
     path(
         "treatment-episodes/<int:episode_id>/phases/",

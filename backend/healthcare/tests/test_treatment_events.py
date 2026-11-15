@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
 
-from .models import Doctor, Patient, TreatmentEpisode, TreatmentEvent, TreatmentPhase, UserProfile
-from .views import treatment_event_list, treatment_phase_detail
+from ..models import Doctor, Patient, TreatmentEpisode, TreatmentEvent, TreatmentPhase, UserProfile
+from ..views import treatment_event_list, treatment_phase_detail
 
 U = get_user_model()
 factory = APIRequestFactory()

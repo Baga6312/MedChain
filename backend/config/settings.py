@@ -52,11 +52,14 @@ INSTALLED_APPS = [
 ]
 
 BLOCKCHAIN_DIFFICULTY = int(os.environ.get("BLOCKCHAIN_DIFFICULTY", "3"))
+CHAIN_RPC_URL = os.environ.get("CHAIN_RPC_URL", "http://chain:8545")
+ANCHOR_PRIVATE_KEY = os.environ.get("ANCHOR_PRIVATE_KEY", "")
+
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "healthcare.authentication.RedisFirstTokenAuthentication",
+        "healthcare.auth.authentication.RedisFirstTokenAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",

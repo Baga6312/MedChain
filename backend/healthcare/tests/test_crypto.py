@@ -3,8 +3,8 @@ import base64
 from cryptography.exceptions import InvalidTag
 from django.test import TestCase, override_settings
 
-from . import crypto
-from .models import Doctor, EpisodeKey, Patient, TreatmentEpisode
+from ..blockchain import crypto
+from ..models import Doctor, EpisodeKey, Patient, TreatmentEpisode
 
 KEY = base64.b64encode(bytes(range(32))).decode()
 OTHER = base64.b64encode(bytes(range(1, 33))).decode()

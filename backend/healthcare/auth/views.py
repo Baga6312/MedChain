@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from .models import Patient, SessionToken, UserProfile
+from ..models import Patient, SessionToken, UserProfile
 
 
 def _issue_token(user):

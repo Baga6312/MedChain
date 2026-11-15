@@ -18,7 +18,7 @@ from .models import (
     SecurityAlert,
     UserProfile,
 )
-from .profile_cache import get_profile, invalidate_profile
+from .auth.profile_cache import get_profile, invalidate_profile
 
 
 def is_admin(user):
