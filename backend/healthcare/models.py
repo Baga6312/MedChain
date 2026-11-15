@@ -2,6 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.db import models
+from . import ledger
 
 
 class UserProfile(models.Model):
@@ -222,6 +223,12 @@ class TreatmentPhase(models.Model):
 
 
 class TreatmentEvent(models.Model):
+    class Outcome(models.TextChoices):
+        RECOVERED = "recovered", "Recovered"
+        RECOVERING = "recovering", "Recovering"
+        NO_IMPROVEMENT = "no_improvement", "No improvement"
+        WORSENING = "worsening", "Worsening"
+
     class EventType(models.TextChoices):
         CONSULTATION = "consultation", "Consultation"
         DIAGNOSIS = "diagnosis", "Diagnosis"
@@ -266,6 +273,7 @@ class TreatmentEvent(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     result = models.TextField(blank=True)
+    outcome = models.CharField(max_length=20, choices=Outcome.choices, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

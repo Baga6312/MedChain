@@ -1,18 +1,3 @@
-"""Serializers for the healthcare API.
-
-Two changes from the previous version, both required by the views refactor:
-
-  * `id` is read-only on every serializer. Previously it was
-    `"read_only": False, "required": True`, which let a client choose its own
-    primary key on create and gave PUT a second way to name the target row
-    alongside the URL. The server assigns the pk; the URL identifies the row.
-
-  * The appointment business rules moved here from AppointmentViewSet, where
-    they were implemented twice and the update() copy was missing one of them.
-    validate() runs on create, update and partial update alike, so there is now
-    a single implementation the caller cannot route around.
-"""
-
 from rest_framework import serializers
 
 from .models import (
@@ -172,6 +157,7 @@ class TreatmentEventSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "result",
+            "outcome",
             "created_at",
         ]
         read_only_fields = ["event_id", "author", "author_name", "created_at"]

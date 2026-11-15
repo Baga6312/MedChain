@@ -350,10 +350,22 @@ def treatment_phase_detail(request, episode_id, phase_id):
     old_status = phase.status
     new_status = serializer.validated_data.get("status", phase.status)
     failure_reason = serializer.validated_data.get("failure_reason", phase.failure_reason)
-    if new_status == TreatmentPhase.Status.FAILED and not failure_reason.strip():
-        return Response(
-            {"failure_reason": "A reason is required when a phase fails."},
-            status=status.HTTP_400_BAD_REQUEST,
+    if new_status != old_status and new_status in {
+        TreatmentPhase.Status.FAILED,
+        TreatmentPhase.Status.COMPLETED,
+    }:
+        failed = new_status == TreatmentPhase.Status.FAILED
+        TreatmentEvent.objects.create(
+            treatment_episode=episode,
+            treatment_phase=phase,
+            author=request.user,
+            event_type=(
+                TreatmentEvent.EventType.PHASE_FAILED
+                if failed
+                else TreatmentEvent.EventType.PHASE_COMPLETED
+            ),
+            title=f"Phase {'failed' if failed else 'completed'}: {phase.name}",
+            description=(phase.failure_reason if failed else phase.summary) or "-",
         )
     now = timezone.now()
     with transaction.atomic():
@@ -390,6 +402,20 @@ def treatment_event_list(request, episode_id):
     serializer = TreatmentEventSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     event_type = serializer.validated_data.get("event_type")
+    if event_type in {
+        TreatmentEvent.EventType.PHASE_FAILED,
+        TreatmentEvent.EventType.PHASE_COMPLETED,
+    }:
+        return Response(
+            {"detail": "This event type is system-generated."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    if event_type == TreatmentEvent.EventType.RESULT and not serializer.validated_data.get("outcome"):
+        return Response(
+            {"outcome": "An outcome is required for result events."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
     if role == UserProfile.Role.PATIENT and event_type not in {
         TreatmentEvent.EventType.NOTE,
         TreatmentEvent.EventType.RESULT,

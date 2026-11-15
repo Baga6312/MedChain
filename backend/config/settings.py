@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'drf_spectacular', 
 ]
 
+BLOCKCHAIN_DIFFICULTY = int(os.environ.get("BLOCKCHAIN_DIFFICULTY", "3"))
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
