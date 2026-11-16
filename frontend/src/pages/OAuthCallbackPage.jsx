@@ -10,7 +10,7 @@ export default function OAuthCallbackPage() {
     const access = new URLSearchParams(window.location.hash.slice(1)).get('access');
     if (access) {
       acceptToken(access);
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     } else navigate('/login', { replace: true });
   }, []); // eslint-disable-line
 

@@ -169,18 +169,17 @@ function Form({ cfg, resource, row, lookups, onClose, onSaved }) {
 
         {cfg.fields.map((f) => (
           <label className="field" key={f.name}>
-            {f.label}
             {f.ref ? (
-              <select required value={values[f.name]} onChange={set(f.name)}>
+              <select aria-label={f.label} required value={values[f.name]} onChange={set(f.name)}>
                 <option value="" disabled>Choisir…</option>
                 {(lookups[f.ref] ?? []).map((o) => (
                   <option key={o.id} value={o.id}>{o.name} (#{o.id})</option>
                 ))}
               </select>
             ) : f.type === 'textarea' ? (
-              <textarea required value={values[f.name]} onChange={set(f.name)} />
+              <textarea aria-label={f.label} placeholder={f.label} required value={values[f.name]} onChange={set(f.name)} />
             ) : (
-              <input type={f.type} required={!f.nullable} value={values[f.name]} onChange={set(f.name)} />
+              <input aria-label={f.label} placeholder={f.label} type={f.type} required={!f.nullable} value={values[f.name]} onChange={set(f.name)} />
             )}
           </label>
         ))}

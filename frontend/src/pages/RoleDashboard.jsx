@@ -209,13 +209,13 @@ export default function RoleDashboard() {
           <div className="profile-avatar-preview">
             {user.avatar_url ? <img src={user.avatar_url} alt="Avatar du profil" /> : <UserRound size={26} />}
           </div>
-          <label>Photo de profil<input type="file" accept="image/*" onChange={(event) => setProfileData((value) => ({ ...value, avatar: event.target.files[0] || null }))} /></label>
+          <label><span className="sr-only">Photo de profil</span><input aria-label="Photo de profil" type="file" accept="image/*" onChange={(event) => setProfileData((value) => ({ ...value, avatar: event.target.files[0] || null }))} /></label>
           <div className="profile-fields">
-            <label>Prénom<input value={profileData.first_name} onChange={(event) => setProfileData((value) => ({ ...value, first_name: event.target.value }))} /></label>
-            <label>Nom<input value={profileData.last_name} onChange={(event) => setProfileData((value) => ({ ...value, last_name: event.target.value }))} /></label>
-            <label>Email<input value={user.email} disabled /></label>
-            <label>Téléphone<input value={profileData.phone} onChange={(event) => setProfileData((value) => ({ ...value, phone: event.target.value }))} /></label>
-            <label className="profile-wide">Adresse<input value={profileData.address} onChange={(event) => setProfileData((value) => ({ ...value, address: event.target.value }))} /></label>
+            <label><input aria-label="Prénom" placeholder="Prénom" value={profileData.first_name} onChange={(event) => setProfileData((value) => ({ ...value, first_name: event.target.value }))} /></label>
+            <label><input aria-label="Nom" placeholder="Nom" value={profileData.last_name} onChange={(event) => setProfileData((value) => ({ ...value, last_name: event.target.value }))} /></label>
+            <label><input aria-label="Email" placeholder="Email" value={user.email} disabled /></label>
+            <label><input aria-label="Téléphone" placeholder="Téléphone" value={profileData.phone} onChange={(event) => setProfileData((value) => ({ ...value, phone: event.target.value }))} /></label>
+            <label className="profile-wide"><input aria-label="Adresse" placeholder="Adresse" value={profileData.address} onChange={(event) => setProfileData((value) => ({ ...value, address: event.target.value }))} /></label>
           </div>
           <button className="primary-button" disabled={profileSaving}>{profileSaving ? 'Enregistrement…' : 'Enregistrer le profil'}</button>
         </form>

@@ -193,10 +193,10 @@ export default function AdminDashboard() {
         <div className="modal-backdrop" onClick={() => setShowCreate(false)}>
           <form className="modal" onClick={(event) => event.stopPropagation()} onSubmit={createUser}>
             <div className="modal-heading"><h2>Créer un utilisateur</h2><button type="button" className="icon-button" onClick={() => setShowCreate(false)}><X size={18} /></button></div>
-            <label className="field">Prénom<input name="first_name" required /></label>
-            <label className="field">Nom<input name="last_name" required /></label>
-            <label className="field">Email<input name="email" type="email" required /></label>
-            <label className="field">Mot de passe<input name="password" type="password" required /></label>
+            <label className="field"><input aria-label="Prénom" placeholder="Prénom" name="first_name" required /></label>
+            <label className="field"><input aria-label="Nom" placeholder="Nom" name="last_name" required /></label>
+            <label className="field"><input aria-label="Email" placeholder="Email" name="email" type="email" required /></label>
+            <label className="field"><input aria-label="Mot de passe" placeholder="Mot de passe" name="password" type="password" required /></label>
             <p className="form-hint">Le compte sera créé avec le rôle Patient. Vous pourrez ensuite modifier son rôle dans le tableau.</p>
             <div className="modal-actions"><button type="button" className="quiet-button" onClick={() => setShowCreate(false)}>Annuler</button><button className="primary-button">Créer le compte</button></div>
           </form>

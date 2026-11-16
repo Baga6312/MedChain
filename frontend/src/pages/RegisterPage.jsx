@@ -4,6 +4,7 @@ import { AlertTriangle, LockKeyhole } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNotify } from '../context/NotifyContext';
 import OAuthButtons from '../components/auth/OAuthButtons';
+import ThemeToggle from '../components/common/ThemeToggle';
 
 const FIELDS = [
   ['first_name', 'Prénom', 'text'],
@@ -40,12 +41,13 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-page">
+      <ThemeToggle />
       <form className="auth-card" onSubmit={submit}>
         <span className="brand-mark"><LockKeyhole size={18} /></span>
         <h1>Créer un compte</h1>
         {FIELDS.map(([k, label, type]) => (
-          <label className="field" key={k}>{label}
-            <input type={type} required={k !== 'phone'} value={v[k]}
+          <label className="field" key={k}>
+            <input aria-label={label} placeholder={label} type={type} required={k !== 'phone'} value={v[k]}
               onChange={(e) => setV({ ...v, [k]: e.target.value })} />
           </label>
         ))}

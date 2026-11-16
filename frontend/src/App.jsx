@@ -7,26 +7,23 @@ import RegisterPage from './pages/RegisterPage';
 import OAuthCallbackPage from './pages/OAuthCallbackPage';
 import AdminDashboard from './pages/AdminDashboard';
 import RoleDashboard from './pages/RoleDashboard';
+import HomePage from './pages/HomePage';
 import { NotifyProvider } from './context/NotifyContext';
 import { AuthProvider } from './context/AuthContext';
-import { useAuth } from './context/AuthContext';
-
-function HomeRedirect() {
-  const { isAdmin } = useAuth();
-  return <Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />;
-}
+import { ThemeProvider } from './context/ThemeContext';
 
 export default function App() {
   return (
-    <NotifyProvider>
-      <AuthProvider>
+    <ThemeProvider>
+      <NotifyProvider>
+        <AuthProvider>
         <Routes>
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<AppShell />}>
-              <Route path="/" element={<HomeRedirect />} />
               <Route path="/dashboard" element={<RoleDashboard />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/:resource" element={<ResourcePage />} />
@@ -34,7 +31,8 @@ export default function App() {
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </AuthProvider>
-    </NotifyProvider>
+        </AuthProvider>
+      </NotifyProvider>
+    </ThemeProvider>
   );
 }
