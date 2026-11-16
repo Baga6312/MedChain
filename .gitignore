@@ -5,3 +5,4 @@ __pycache__/
 node_modules/
 logs/*.jsonl
 logs/
+K8S/medchain-secret.yaml

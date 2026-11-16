@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: medchain-config
+data:
+  DJANGO_DEBUG: "0"
+  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,backend"
+  DB_NAME: "medchain"
+  DB_USER: "shops"
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  BACKEND_PORT: "8000"
+  REDIS_URL: "redis://redis:6379/0"
+  MEDIA_ROOT: "/app/media"
+  MEDIA_URL: "/media/"
+  STORAGE_BACKEND: "django.core.files.storage.FileSystemStorage"
+  LOG_LEVEL: "INFO"
+  LOG_SERVICE_NAME: "medchain-backend"
+  LOG_ENVIRONMENT: "development"
+  LOG_FILE_PATH: "/app/logs/medchain.jsonl"
+  CHAIN_RPC_URL: "http://chain:8545"
+  BLOCKCHAIN_DIFFICULTY: "3"
+  MEDCHAIN_KEY_ID: "env-v1"
+  GOOGLE_OAUTH_REDIRECT_URI: "http://localhost:8000/api/auth/google/callback/"
+  FRONTEND_OAUTH_CALLBACK_URL: "http://localhost/oauth/callback"
+  ELASTICSEARCH_HOST: "elasticsearch"
+  ELASTICSEARCH_PORT: "9200"

@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chain
+  labels:
+    app: chain
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chain
+  template:
+    metadata:
+      labels:
+        app: chain
+    spec:
+      containers:
+        - name: anvil
+          image: ghcr.io/foundry-rs/foundry:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - anvil
+          args:
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8545"
+            - --chain-id
+            - "31337"
+            - --state
+            - /data/anvil-state.json
+          ports:
+            - name: rpc
+              containerPort: 8545
+              protocol: TCP
+          volumeMounts:
+            - name: chain-data
+              mountPath: /data
+          readinessProbe:
+            exec:
+              command:
+                - cast
+                - block-number
+                - --rpc-url
+                - http://127.0.0.1:8545
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - cast
+                - block-number
+                - --rpc-url
+                - http://127.0.0.1:8545
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: chain-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chain
+  labels:
+    app: chain
+spec:
+  type: ClusterIP
+  selector:
+    app: chain
+  ports:
+    - name: rpc
+      port: 8545
+      targetPort: 8545
+      protocol: TCP
