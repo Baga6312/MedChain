@@ -8,6 +8,7 @@ import OAuthCallbackPage from './pages/OAuthCallbackPage';
 import AdminDashboard from './pages/AdminDashboard';
 import RoleDashboard from './pages/RoleDashboard';
 import HomePage from './pages/HomePage';
+import SettingsPage from './pages/SettingsPage';
 import { NotifyProvider } from './context/NotifyContext';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -25,6 +26,7 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppShell />}>
               <Route path="/dashboard" element={<RoleDashboard />} />
+              <Route path="/settings" element={<SettingsPage />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/:resource" element={<ResourcePage />} />
             </Route>

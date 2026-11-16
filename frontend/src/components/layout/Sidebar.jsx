@@ -14,7 +14,7 @@ export default function Sidebar() {
         <span className="brand-mark"><LockKeyhole size={18} /></span>
         <div>
           <strong>MedChain</strong>
-          <small>Healthcare API</small>
+          <small>Health Ledger</small>
         </div>
       </div>
       <nav className="side-nav">
@@ -54,7 +54,7 @@ export default function Sidebar() {
           </button>
           ))}
       </nav>
-      <button className="quiet-button" onClick={logout}>Déconnexion</button>
+      <button className="sidebar-logout" onClick={logout}><span>Déconnexion</span></button>
     </aside>
   );
 }

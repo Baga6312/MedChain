@@ -37,7 +37,7 @@ const integrityLabels = {
 };
 
 export default function RoleDashboard() {
-  const { user, refreshUser } = useAuth();
+  const { user } = useAuth();
   const notify = useNotify();
   const [episodes, setEpisodes] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -48,8 +48,6 @@ export default function RoleDashboard() {
   const [selectedPhase, setSelectedPhase] = useState({});
   const [phaseData, setPhaseData] = useState({ name: '', summary: '' });
   const [eventData, setEventData] = useState({ title: '', description: '', result: '', event_type: 'note', treatment_phase: '' });
-  const [profileData, setProfileData] = useState({ first_name: user.first_name || '', last_name: user.last_name || '', phone: user.phone || '', address: user.address || '', avatar: null });
-  const [profileSaving, setProfileSaving] = useState(false);
   const [integrity, setIntegrity] = useState({});
   const [integrityEpisode, setIntegrityEpisode] = useState(null);
 
@@ -66,25 +64,6 @@ export default function RoleDashboard() {
   useEffect(() => {
     load();
   }, [load]);
-
-  async function saveProfile(event) {
-    event.preventDefault();
-    setProfileSaving(true);
-    try {
-      const formData = new FormData();
-      Object.entries(profileData).forEach(([key, value]) => {
-        if (value !== null) formData.append(key, value);
-      });
-      await request('/auth/profile/', { method: 'PATCH', formData });
-      await refreshUser();
-      setProfileData((value) => ({ ...value, avatar: null }));
-      notify('Profil mis à jour.');
-    } catch (requestError) {
-      notify(requestError.message, 'danger');
-    } finally {
-      setProfileSaving(false);
-    }
-  }
 
   async function changeStatus(id, status) {
     try {
@@ -200,34 +179,13 @@ export default function RoleDashboard() {
         </div>
       </div>
 
-      <section className="panel">
-        <div className="panel-heading">
-          <div><h2>Mon profil</h2><p>Informations personnelles, hors dossier médical.</p></div>
-          <UserRound size={20} />
-        </div>
-        <form className="profile-settings" onSubmit={saveProfile}>
-          <div className="profile-avatar-preview">
-            {user.avatar_url ? <img src={user.avatar_url} alt="Avatar du profil" /> : <UserRound size={26} />}
-          </div>
-          <label><span className="sr-only">Photo de profil</span><input aria-label="Photo de profil" type="file" accept="image/*" onChange={(event) => setProfileData((value) => ({ ...value, avatar: event.target.files[0] || null }))} /></label>
-          <div className="profile-fields">
-            <label><input aria-label="Prénom" placeholder="Prénom" value={profileData.first_name} onChange={(event) => setProfileData((value) => ({ ...value, first_name: event.target.value }))} /></label>
-            <label><input aria-label="Nom" placeholder="Nom" value={profileData.last_name} onChange={(event) => setProfileData((value) => ({ ...value, last_name: event.target.value }))} /></label>
-            <label><input aria-label="Email" placeholder="Email" value={user.email} disabled /></label>
-            <label><input aria-label="Téléphone" placeholder="Téléphone" value={profileData.phone} onChange={(event) => setProfileData((value) => ({ ...value, phone: event.target.value }))} /></label>
-            <label className="profile-wide"><input aria-label="Adresse" placeholder="Adresse" value={profileData.address} onChange={(event) => setProfileData((value) => ({ ...value, address: event.target.value }))} /></label>
-          </div>
-          <button className="primary-button" disabled={profileSaving}>{profileSaving ? 'Enregistrement…' : 'Enregistrer le profil'}</button>
-        </form>
-      </section>
-
       {error && <div className="inline-error"><AlertTriangle size={16} /> {error}</div>}
       {user.role === 'patient' && (
-        <section className="panel">
+        <section className="panel treatment-request-panel">
           <div className="panel-heading">
             <div><h2>Demander un traitement</h2><p>Un médecin devra activer la prise en charge.</p></div>
           </div>
-          <form className="modal-actions" onSubmit={requestTreatment}>
+          <form className="treatment-request-form" onSubmit={requestTreatment}>
             <select
               required
               value={requestData.doctor}
@@ -248,7 +206,7 @@ export default function RoleDashboard() {
           </form>
         </section>
       )}
-      <section className="panel">
+      <section className="panel treatments-panel">
         <div className="panel-heading">
           <div><h2>{user.role === 'doctor' ? 'Mes patients' : 'Mes traitements'}</h2><p>Historique des prises en charge.</p></div>
         </div>
