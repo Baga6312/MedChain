@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  namespace: medchain
   name: gateway-nginx-config
 data:
   default.conf: |

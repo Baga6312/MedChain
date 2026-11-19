@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: medchain
   name: postgres
   labels:
     app: postgres
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: r1bit99/medchain-postgres:latest
+          image: postgres:16
           imagePullPolicy: IfNotPresent
           ports:
             - name: postgres

@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: medchain
   name: redis
   labels:
     app: redis
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: r1bit99/medchain-redis:latest
+          image: redis:7
           imagePullPolicy: IfNotPresent
           command:
             - redis-server

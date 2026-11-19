@@ -17,9 +17,10 @@ RUN addgroup --system django \
 COPY --chown=django:django . .
 
 # Create media directory and assign ownership
-RUN mkdir -p /app/media/avatars \
-    && chown -R django:django /app/media \
-    && chmod -R 755 /app/media
+RUN mkdir -p /app/media/avatars /app/logs \
+    && chown -R django:django /app/media /app/logs \
+    && chmod -R 755 /app/media \
+    && chmod 0777 /app/logs
 
 # Run as non-root user
 USER django
