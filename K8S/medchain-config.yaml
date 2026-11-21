@@ -15,7 +15,7 @@ data:
   MEDIA_ROOT: "/app/media"
   MEDIA_URL: "/media/"
   STORAGE_BACKEND: "django.core.files.storage.FileSystemStorage"
-  LOG_LEVEL: "DEBUG"
+  LOG_LEVEL: "INFO"
   LOG_SERVICE_NAME: "medchain-backend"
   LOG_ENVIRONMENT: "development"
   LOG_FILE_PATH: "/app/logs/medchain.jsonl"
