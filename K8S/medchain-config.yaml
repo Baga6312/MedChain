@@ -5,7 +5,7 @@ metadata:
   name: medchain-config
 data:
   DJANGO_DEBUG: "0"
-  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,backend,10.0.2.2,192.168.100.37,10.142.228.246,medchain-gateway,frontend,postgres,redis"
+  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,backend,10.0.2.2,192.168.100.37,10.142.228.246,9.205.157.240,medchain-gateway,frontend,postgres,redis,medchain.dev"
   DB_NAME: "medchain"
   DB_USER: "shops"
   DB_HOST: "postgres"
@@ -23,7 +23,7 @@ data:
   ANCHOR_PRIVATE_KEY: "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
   BLOCKCHAIN_DIFFICULTY: "3"
   MEDCHAIN_KEY_ID: "env-v1"
-  GOOGLE_OAUTH_REDIRECT_URI: "http://localhost:8000/api/auth/google/callback/"
-  FRONTEND_OAUTH_CALLBACK_URL: "http://localhost/oauth/callback"
+  GOOGLE_OAUTH_REDIRECT_URI: "https://medchain.dev/api/auth/google/callback/"
+  FRONTEND_OAUTH_CALLBACK_URL: "https://medchain.dev/oauth/callback"
   ELASTICSEARCH_HOST: "elasticsearch"
   ELASTICSEARCH_PORT: "9200"

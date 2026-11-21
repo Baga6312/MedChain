@@ -19,3 +19,5 @@ sqlparse==0.6.0
 uritemplate==4.2.0
 cryptography
 web3>=7
+django-storages
+boto3

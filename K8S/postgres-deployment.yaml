@@ -10,11 +10,17 @@ spec:
   selector:
     matchLabels:
       app: postgres
+  strategy: 
+    type: Recreate
   template:
     metadata:
       labels:
         app: postgres
     spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: postgres-data
       containers:
         - name: postgres
           image: postgres:16
@@ -49,6 +55,10 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 6
+            volumeMounts:
+              - name: data
+                mountPath: /var/lib/postgresql/data
+                subPath: pgdata
           livenessProbe:
             exec:
               command:
