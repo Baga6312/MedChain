@@ -55,10 +55,10 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 6
-            volumeMounts:
-              - name: data
-                mountPath: /var/lib/postgresql/data
-                subPath: pgdata
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata
           livenessProbe:
             exec:
               command:
