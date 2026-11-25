@@ -9,12 +9,12 @@ data:
         Flush           1
         Daemon          Off
         Log_Level       info
-        Parsers_File     /fluent-bit/etc/parsers.conf
 
     [INPUT]
         Name              tail
-        Path              /var/log/containers/*.log
-        Parser            docker
+        Path              /var/log/containers/*_medchain_*.log
+        Exclude_Path      /var/log/containers/*fluent-bit*.log
+        multiline.parser  docker, cri
         Tag               medchain.*
         Mem_Buf_Limit     20MB
         Skip_Long_Lines   On
@@ -36,18 +36,11 @@ data:
         Replace_Dots      On
         Retry_Limit       False
 
-  parsers.conf: |
-    [PARSER]
-        Name        docker
-        Format      json
-        Time_Key    time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L
-        Time_Keep   On
-
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
+  namespace: medchain
   name: fluent-bit
 
 ---
@@ -74,6 +67,13 @@ spec:
         - name: fluent-bit
           image: fluent/fluent-bit:3.1
           imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
           env:
             - name: LOG_ENVIRONMENT
               valueFrom:
@@ -94,10 +94,6 @@ spec:
             - name: fluent-bit-config
               mountPath: /fluent-bit/etc/fluent-bit.conf
               subPath: fluent-bit.conf
-              readOnly: true
-            - name: fluent-bit-config
-              mountPath: /fluent-bit/etc/parsers.conf
-              subPath: parsers.conf
               readOnly: true
             - name: varlog
               mountPath: /var/log
@@ -120,7 +116,6 @@ spec:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  namespace: medchain
   name: fluent-bit
 rules:
   - apiGroups:
@@ -137,7 +132,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  namespace: medchain
   name: fluent-bit
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -146,4 +140,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: fluent-bit
-    namespace: default
+    namespace: medchain
