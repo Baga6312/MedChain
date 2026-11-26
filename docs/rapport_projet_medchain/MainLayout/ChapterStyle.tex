@@ -1,0 +1,50 @@
+\definecolor{CentraleBlue}{RGB}{0,51,102}
+\makeatletter
+
+% ---------- Style 1 : HansenColor (left-aligned) ----------
+\makechapterstyle{HansenColor}{%
+  \setlength{\beforechapskip}{0pt}
+  \setlength{\beforechapskip}{0pt}    % space above the title (was the big gap)
+  \setlength{\midchapskip}{10pt}
+  \setlength{\afterchapskip}{25pt}    % space below the title
+  \renewcommand\chapnamefont{\normalfont\Large\scshape\raggedright}
+  \renewcommand\chaptitlefont{\normalfont\huge\bfseries\scshape\color{CentraleBlue}}
+  \renewcommand\chapternamenum{}
+  \renewcommand\printchaptername{}
+  \renewcommand\printchapternum{}
+  \renewcommand\afterchapternum{}
+  \renewcommand\printchaptertitle[1]{\chaptitlefont\raggedright ##1\par}
+}
+
+% ---------- Marker used by daleif1 ----------
+\newsavebox{\feline@chapter}
+\newcommand\feline@chapter@marker[1][4cm]{%
+  \sbox\feline@chapter{%
+    \resizebox{!}{#1}{\fboxsep=1pt%
+      \colorbox{CentraleBlue}{\parbox[t][3mm][c]{2.5mm}{\centering\color{white}\bfseries\sffamily\thechapter}}%
+    }}%
+  \rotatebox{90}{%
+    \resizebox{\heightof{\usebox{\feline@chapter}}+\depthof{\usebox{\feline@chapter}}}%
+    {!}{\scshape\so\@chapapp}}\quad%
+  \raisebox{\depthof{\usebox{\feline@chapter}}}{\usebox{\feline@chapter}}%
+}
+\newcommand\feline@chm[1][4cm]{%
+  \sbox\feline@chapter{\feline@chapter@marker[#1]}%
+  \makebox[0pt][l]{\makebox[1cm][r]{\usebox\feline@chapter}}}
+
+% ---------- Style 2 : daleif1 (left-aligned) ----------
+\makechapterstyle{daleif1}{%
+  \setlength{\beforechapskip}{0pt}
+  \setlength{\midchapskip}{10pt}
+  \setlength{\afterchapskip}{25pt}
+  \renewcommand\chapnamefont{\normalfont\Large\scshape\raggedright\so}
+  \renewcommand\chaptitlefont{\normalfont\huge\bfseries\scshape\color{CentraleBlue}}
+  \renewcommand\chapternamenum{}
+  \renewcommand\printchaptername{}
+  \renewcommand\printchapternum{\feline@chm[0.35cm]\par}
+  \renewcommand\afterchapternum{\par\vskip\midchapskip}
+  \renewcommand\printchaptertitle[1]{\chaptitlefont\raggedright ##1\par}
+}
+\makeatother
+
+\chapterstyle{HansenColor}   % or daleif1

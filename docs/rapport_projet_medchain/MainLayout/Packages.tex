@@ -1,0 +1,44 @@
+% --- Packages essentiels ---
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{array}
+\usepackage{geometry}
+% memoir definit deja \footruleskip : on le neutralise avant fancyhdr
+\let\footruleskip\undefined
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{lipsum}
+\usepackage{glossaries}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+
+% --- Chemin des figures : diagrammes exportes et captures d'ecran ---
+\graphicspath{{Diagrams/pdf/}{Screenshots/}}
+\setlist{itemsep=0pt, topsep=0pt, partopsep=0pt, parsep=0pt}
+% Configuration hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={MedChain Rapport de projet},
+    pdfauthor={Mariem Naffeti, Wiem Ben Salem, Eya Ben Othman, Oussema ben Ayech},
+    pdfsubject={Rapport de projet MedChain}
+}
+
+% Nouveaux types de colonnes pour les tableaux
+\newcolumntype{P}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
