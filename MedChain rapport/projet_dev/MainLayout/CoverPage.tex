@@ -1,0 +1,78 @@
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % ligne horizontale
+\setlength\fboxrule{2pt} % épaisseur de la boîte du sujet
+\newgeometry{top=2cm, bottom=1cm, left=2cm, right=2cm}
+
+% --- LOGO + EN-TÊTE ---
+\begin{center}
+\begin{tabular}{c}
+    \includegraphics[width=6cm]{Images/tek_up_logo.jpg} % Logo Tekup
+\end{tabular}
+\end{center}
+
+\vskip 1.5em
+\HRule
+\vskip 0.5em
+
+% --- TITRE DU PROJET ---
+\begin{center}
+\vskip 1em
+\textbf{\LARGE Rapport de Projet de Développement}
+\vskip 1.5em
+
+{\large Présenté par :}
+\vskip 0.8em
+\textbf{\large \prenomNOM}
+
+\vskip 2.5em
+
+{\large Projet réalisé au sein de :}
+\vskip 0.8em
+\textbf{\Large \nomEntreprise}
+\end{center}
+
+% --- SUJET DU PROJET ---
+\begin{center}
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{darkblue}{RGB}{0, 51, 102}
+\vskip 3em
+
+{\Large Sujet du projet :}
+\vskip 1.5em
+
+\fcolorbox{darkblue}{lightgray}{
+    \begin{minipage}[c][5.5em][c]{0.88\textwidth}
+        \centering
+        \textbf{\Large \sujetMission}
+    \end{minipage}
+}
+\end{center}
+
+% --- ENCADRANTES ---
+\begin{center}
+\Large
+\vskip 3em
+
+\begin{minipage}[c]{0.95\textwidth}
+    \begin{flushleft}
+    {\large Enseignante encadrante :}
+    \vskip 0.5em
+    \begin{itemize}
+        \item \textbf{Mme Ines Agrebi}
+    \end{itemize}
+    \end{flushleft}
+    \vskip 0.5em
+    \HRule
+\end{minipage}
+\end{center}
+
+% --- BAS DE PAGE ---
+ % Pousse le contenu vers le bas
+\begin{center}
+    \Large
+    \textbf{ANNÉE UNIVERSITAIRE \anneeUniversitaire}
+\end{center}
+
+\vskip 1em
+\restoregeometry
+\normalsize
+\clearpage

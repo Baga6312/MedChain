@@ -1,0 +1,126 @@
+- generic [ref=f20e3]:
+  - banner [ref=f20e4]:
+    - link "MedChain Health Ledger" [ref=f20e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f20e11]:
+        - strong [ref=f20e12]: MedChain
+        - generic [ref=f20e13]: Health Ledger
+    - navigation "Navigation principale" [ref=f20e14]:
+      - link "Comment ça marche" [ref=f20e15] [cursor=pointer]:
+        - /url: "#pipeline"
+      - link "Sécurité" [ref=f20e16] [cursor=pointer]:
+        - /url: "#trust"
+      - link "Pour les professionnels" [ref=f20e17] [cursor=pointer]:
+        - /url: "#trust"
+    - generic [ref=f20e18]:
+      - button "Activer le mode sombre" [ref=f20e19] [cursor=pointer]
+      - link "Ouvrir mon profil" [ref=f20e22] [cursor=pointer]:
+        - /url: /settings
+        - text: M
+  - main [ref=f20e23]:
+    - generic [ref=f20e24]:
+      - generic [ref=f20e25]:
+        - generic [ref=f20e26]: Infrastructure de santé cryptographique
+        - heading [level=1] [ref=f20e30]:
+          - text: Des dossiers médicaux
+          - emphasis [ref=f20e31]: infalsifiables.
+          - text: Une confiance absolue.
+        - paragraph [ref=f20e32]: MedChain connecte patients, médecins et établissements de santé autour d'un parcours de soins sécurisé, traçable et respectueux du secret médical.
+        - generic [ref=f20e33]:
+          - link "Créer mon espace" [ref=f20e34] [cursor=pointer]:
+            - /url: /register
+          - link "Explorer la plateforme" [ref=f20e37] [cursor=pointer]:
+            - /url: "#pipeline"
+        - generic [ref=f20e38]:
+          - generic [ref=f20e39]:
+            - strong [ref=f20e40]: 100%
+            - generic [ref=f20e41]: Intégrité vérifiable
+          - generic [ref=f20e42]:
+            - strong [ref=f20e43]: AES-256
+            - generic [ref=f20e44]: Données chiffrées
+          - generic [ref=f20e45]:
+            - strong [ref=f20e46]: HDS
+            - generic [ref=f20e47]: Conçu pour la santé
+      - generic "Visualisation de la confiance MedChain" [ref=f20e48]:
+        - generic [ref=f20e51]:
+          - strong [ref=f20e55]: Intégritévérifiée
+          - generic [ref=f20e56]: "Bloc #4,892,104"
+        - generic [ref=f20e67]:
+          - generic [ref=f20e68]: Hash validé
+          - generic [ref=f20e69]: 0x9b44c8d2…a719
+        - generic [ref=f20e75]:
+          - generic [ref=f20e76]: Dossier chiffré
+          - generic [ref=f20e77]: Accès autorisé
+    - generic [ref=f20e78]:
+      - generic [ref=f20e79]:
+        - generic [ref=f20e80]:
+          - text: Le parcours de confiance
+          - heading "De l'acte médical à la preuve" [level=2] [ref=f20e81]
+        - paragraph [ref=f20e82]: Une représentation simple d'une architecture technique conçue pour rester lisible par les équipes de soins.
+      - generic [ref=f20e83]:
+        - generic [ref=f20e84]:
+          - generic [ref=f20e85]: "01"
+          - heading "Consentement patient" [level=3] [ref=f20e90]
+          - paragraph [ref=f20e91]: Le patient garde le contrôle de ses autorisations médicales.
+          - code [ref=f20e92]: did:medchain:patient_8f93
+        - generic [ref=f20e95]:
+          - generic [ref=f20e96]: "02"
+          - heading "Acte médical signé" [level=3] [ref=f20e102]
+          - paragraph [ref=f20e103]: Le praticien ajoute une observation ou un résultat vérifiable.
+          - code [ref=f20e104]: signature:rpps_10103492819
+        - generic [ref=f20e107]:
+          - generic [ref=f20e108]: "03"
+          - heading "Parcours de soins" [level=3] [ref=f20e115]
+          - paragraph [ref=f20e116]: Chaque étape est organisée dans une timeline claire.
+          - code [ref=f20e117]: timeline:consultation → suivi
+        - generic [ref=f20e120]:
+          - generic [ref=f20e121]: "04"
+          - heading "Preuve cryptographique" [level=3] [ref=f20e126]
+          - paragraph [ref=f20e127]: Le contenu reste chiffré, tandis que son intégrité est prouvée.
+          - code [ref=f20e128]: merkle_root:0x9b44c8d2…
+    - generic [ref=f20e129]:
+      - generic [ref=f20e130]:
+        - generic [ref=f20e131]:
+          - text: Une expérience pensée pour le soin
+          - heading "Tout le parcours, au même endroit." [level=2] [ref=f20e132]
+        - paragraph [ref=f20e133]: Un espace lisible pour agir rapidement, suivre les étapes et vérifier chaque information importante.
+      - generic [ref=f20e134]:
+        - generic [ref=f20e135]:
+          - article [ref=f20e136]:
+            - heading "Patients" [level=3] [ref=f20e142]
+            - paragraph [ref=f20e143]: Demandez une prise en charge, retrouvez vos traitements et gardez une vision claire de votre parcours.
+            - link "Accéder à mon espace" [ref=f20e144] [cursor=pointer]:
+              - /url: /dashboard
+          - article [ref=f20e148]:
+            - heading "Professionnels" [level=3] [ref=f20e154]
+            - paragraph [ref=f20e155]: Coordonnez les soins avec une timeline partagée et des événements médicaux signés.
+            - link "Découvrir la vue métier" [ref=f20e156] [cursor=pointer]:
+              - /url: "#trust"
+        - generic [ref=f20e160]:
+          - generic [ref=f20e161]:
+            - generic [ref=f20e162]: Journal de confiance
+            - generic [ref=f20e165]: EN DIRECT
+          - generic [ref=f20e168]:
+            - strong [ref=f20e169]: Résultat clinique ajouté
+            - generic [ref=f20e170]: Consultation · il y a 2 min
+          - generic [ref=f20e176]:
+            - strong [ref=f20e177]: Consentement vérifié
+            - generic [ref=f20e178]: Dossier patient · il y a 8 min
+          - generic [ref=f20e184]:
+            - strong [ref=f20e185]: Prochain rendez-vous
+            - generic [ref=f20e186]: Suivi médical · demain
+          - generic [ref=f20e191]:
+            - generic [ref=f20e192]: HASH DE SESSION
+            - code [ref=f20e193]: 0x7f3a…91c2
+    - generic [ref=f20e195]:
+      - generic [ref=f20e196]:
+        - text: Traçabilité sans angle mort
+        - heading "La même source de vérité pour chaque acteur." [level=2] [ref=f20e197]
+        - paragraph [ref=f20e198]: Les événements restent privés et chiffrés. Seule leur empreinte d'intégrité est partagée pour garantir qu'aucune information n'a été altérée.
+      - generic [ref=f20e199]:
+        - generic [ref=f20e200]: Consentements explicites
+        - generic [ref=f20e204]: Historique horodaté
+        - generic [ref=f20e208]: Ancrage blockchain vérifiable
+  - contentinfo [ref=f20e212]:
+    - strong [ref=f20e213]: MedChain
+    - generic [ref=f20e214]: Health Ledger · Sécurité clinique par conception

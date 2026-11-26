@@ -1,0 +1,122 @@
+- generic [ref=f17e28]:
+  - complementary [ref=f17e29]:
+    - generic [ref=f17e36]:
+      - strong [ref=f17e37]: MedChain
+      - generic [ref=f17e38]: Health Ledger
+    - navigation [ref=f17e39]:
+      - text: PLATEFORME CLINIQUE
+      - button "Administration" [ref=f17e40] [cursor=pointer]
+      - button "Médecins" [ref=f17e45] [cursor=pointer]
+      - button "Patients" [ref=f17e51] [cursor=pointer]
+      - button "Rendez-vous" [ref=f17e56] [cursor=pointer]
+      - button "Dossiers médicaux" [ref=f17e60] [cursor=pointer]
+    - button "Déconnexion" [ref=f17e66] [cursor=pointer]
+  - main [ref=f17e68]:
+    - generic [ref=f17e69]:
+      - generic [ref=f17e70]:
+        - generic [ref=f17e71]: MedChain
+        - strong [ref=f17e74]: Console clinique
+      - generic [ref=f17e75]:
+        - generic [ref=f17e76]: Réseau sécurisé
+        - button "Activer le mode sombre" [ref=f17e78] [cursor=pointer]
+        - button "Notifications" [ref=f17e81] [cursor=pointer]:
+          - generic [ref=f17e85]: "2"
+        - button "Ouvrir les paramètres du compte" [ref=f17e86] [cursor=pointer]:
+          - generic [ref=f17e87]: M
+          - generic [ref=f17e88]:
+            - strong [ref=f17e89]: MedChain
+            - generic [ref=f17e90]: Administrateur
+    - generic [ref=f17e91]:
+      - generic [ref=f17e92]:
+        - generic [ref=f17e93]:
+          - text: Supervision
+          - heading "Administration" [level=1] [ref=f17e94]
+          - paragraph [ref=f17e95]: Vue globale de l’activité et de la sécurité de MedChain.
+        - generic [ref=f17e96]:
+          - generic [ref=f17e97]: API opérationnelle
+          - button "Ajouter un utilisateur" [ref=f17e100] [cursor=pointer]
+      - generic [ref=f17e102]:
+        - generic [ref=f17e103]:
+          - generic [ref=f17e104]: Utilisateurs
+          - strong [ref=f17e110]: "3"
+          - generic [ref=f17e111]: Enregistrés
+        - generic [ref=f17e112]:
+          - generic [ref=f17e113]: Patients
+          - strong [ref=f17e118]: "5"
+          - generic [ref=f17e119]: Enregistrés
+        - generic [ref=f17e120]:
+          - generic [ref=f17e121]: Médecins
+          - strong [ref=f17e126]: "3"
+          - generic [ref=f17e127]: Enregistrés
+        - generic [ref=f17e128]:
+          - generic [ref=f17e129]: Alertes ouvertes
+          - strong [ref=f17e133]: "0"
+          - generic [ref=f17e134]: À traiter
+        - generic [ref=f17e135]:
+          - generic [ref=f17e136]: Nouveaux comptes
+          - strong [ref=f17e142]: "3"
+          - generic [ref=f17e143]: Enregistrés
+        - generic [ref=f17e144]:
+          - generic [ref=f17e145]: Comptes à valider
+          - strong [ref=f17e149]: "0"
+          - generic [ref=f17e150]: Enregistrés
+      - generic [ref=f17e151]:
+        - generic [ref=f17e152]:
+          - generic [ref=f17e153]:
+            - generic [ref=f17e154]:
+              - heading "Utilisateurs" [level=2] [ref=f17e155]
+              - paragraph [ref=f17e156]: Activation, rôles et supervision des comptes.
+            - textbox [ref=f17e161]:
+              - /placeholder: Rechercher...
+          - table [ref=f17e163]:
+            - rowgroup [ref=f17e164]:
+              - row [ref=f17e165]:
+                - columnheader "Utilisateur" [ref=f17e166]
+                - columnheader "Rôle" [ref=f17e167]
+                - columnheader "Inscription" [ref=f17e168]
+                - columnheader "Statut" [ref=f17e169]
+                - columnheader [ref=f17e170]
+            - rowgroup [ref=f17e171]:
+              - row [ref=f17e172] [cursor=pointer]:
+                - cell "Demo Patient demo.patient@medchain.local" [ref=f17e173]: Demo Patientdemo.patient@medchain.local
+                - cell "Patient" [ref=f17e174]:
+                  - combobox [ref=f17e175]:
+                    - option "Patient" [selected]
+                    - option "Médecin"
+                - cell "26/11/2026" [ref=f17e176]
+                - cell "Actif" [ref=f17e177]
+                - cell [ref=f17e178]:
+                  - button "Désactiver" [ref=f17e179]
+              - row [ref=f17e180] [cursor=pointer]:
+                - cell "Demo Doctor demo.doctor@medchain.local" [ref=f17e181]: Demo Doctordemo.doctor@medchain.local
+                - cell "Médecin" [ref=f17e182]:
+                  - combobox [ref=f17e183]:
+                    - option "Patient"
+                    - option "Médecin" [selected]
+                - cell "26/11/2026" [ref=f17e184]
+                - cell "Actif" [ref=f17e185]
+                - cell [ref=f17e186]:
+                  - button "Désactiver" [ref=f17e187]
+              - row [ref=f17e188] [cursor=pointer]:
+                - cell "MedChain Administrator admin@medchain.local" [ref=f17e189]: MedChain Administratoradmin@medchain.local
+                - cell "Administrateur" [ref=f17e190]:
+                  - combobox [disabled] [ref=f17e191]:
+                    - option "Administrateur" [selected]
+                    - option "Patient"
+                    - option "Médecin"
+                - cell "26/11/2026" [ref=f17e192]
+                - cell "Actif" [ref=f17e193]
+                - cell [ref=f17e194]:
+                  - button "Désactiver" [ref=f17e195]
+        - generic [ref=f17e196]:
+          - generic [ref=f17e198]:
+            - heading "Alertes de sécurité" [level=2] [ref=f17e199]
+            - paragraph [ref=f17e200]: Événements nécessitant une action.
+          - paragraph [ref=f17e202]: Aucune alerte.
+        - generic [ref=f17e203]:
+          - generic [ref=f17e205]:
+            - heading "Dernières activités" [level=2] [ref=f17e206]
+            - paragraph [ref=f17e207]: Traçabilité des actions sensibles.
+          - generic [ref=f17e213]:
+            - strong [ref=f17e214]: admin_dashboard_viewed
+            - generic [ref=f17e215]: admin@medchain.local · —

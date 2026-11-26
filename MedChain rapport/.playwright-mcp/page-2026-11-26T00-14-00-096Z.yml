@@ -1,0 +1,142 @@
+- generic [ref=f5e28]:
+  - complementary [ref=f5e29]:
+    - generic [ref=f5e36]:
+      - strong [ref=f5e37]: MedChain
+      - generic [ref=f5e38]: Health Ledger
+    - navigation [ref=f5e39]:
+      - text: PLATEFORME CLINIQUE
+      - button "Mon espace" [ref=f5e40] [cursor=pointer]
+      - button "Médecins" [ref=f5e45] [cursor=pointer]
+      - button "Rendez-vous" [ref=f5e51] [cursor=pointer]
+      - button "Dossiers médicaux" [ref=f5e55] [cursor=pointer]
+    - button "Déconnexion" [ref=f5e61] [cursor=pointer]
+  - main [ref=f5e63]:
+    - generic [ref=f5e64]:
+      - generic [ref=f5e65]:
+        - generic [ref=f5e66]: MedChain
+        - strong [ref=f5e69]: Console clinique
+      - generic [ref=f5e70]:
+        - generic [ref=f5e71]: Réseau sécurisé
+        - button "Activer le mode sombre" [ref=f5e73] [cursor=pointer]
+        - button "Notifications" [ref=f5e76] [cursor=pointer]:
+          - generic [ref=f5e80]: "2"
+        - button "Ouvrir les paramètres du compte" [ref=f5e81] [cursor=pointer]:
+          - generic [ref=f5e82]: D
+          - generic [ref=f5e83]:
+            - strong [ref=f5e84]: Demo
+            - generic [ref=f5e85]: Espace patient
+    - generic [ref=f5e86]:
+      - generic [ref=f5e88]:
+        - text: Espace patient
+        - heading "Bonjour Demo" [level=1] [ref=f5e89]
+        - paragraph [ref=f5e90]: Vos informations personnelles et vos traitements associés.
+      - generic [ref=f5e91]:
+        - generic [ref=f5e93]:
+          - heading "Demander un traitement" [level=2] [ref=f5e94]
+          - paragraph [ref=f5e95]: Un médecin devra activer la prise en charge.
+        - generic [ref=f5e96]:
+          - combobox [ref=f5e97]:
+            - option "Choisir un médecin" [selected]
+            - option "Doctor 2 — Neurology"
+            - option "Doctor 3 — Pediatrics"
+            - option "Doctor 1 — Cardiology"
+          - textbox "Motif" [ref=f5e98]
+          - button "Envoyer la demande" [ref=f5e99] [cursor=pointer]
+      - generic [ref=f5e100]:
+        - generic [ref=f5e102]:
+          - heading "Mes traitements" [level=2] [ref=f5e103]
+          - paragraph [ref=f5e104]: Historique des prises en charge.
+        - generic [ref=f5e107]:
+          - generic [ref=f5e108]:
+            - generic [ref=f5e112]:
+              - strong [ref=f5e113]: Doctor 1
+              - generic [ref=f5e114]: Suivi de démonstration · En cours
+            - generic [ref=f5e115]:
+              - button "Abandonner" [ref=f5e116] [cursor=pointer]
+              - button "Timeline" [ref=f5e117] [cursor=pointer]
+          - generic [ref=f5e122]:
+            - generic [ref=f5e123]:
+              - generic [ref=f5e128]:
+                - strong [ref=f5e129]: Enregistrement vérifié
+                - generic [ref=f5e130]: Les blocs et les ancrages blockchain correspondent.
+              - button "Détails" [active] [ref=f5e131] [cursor=pointer]
+            - generic "Progression du traitement" [ref=f5e135]:
+              - button "1 Évaluation initiale Terminée" [ref=f5e137] [cursor=pointer]:
+                - generic [ref=f5e142]: "1"
+                - strong [ref=f5e143]: Évaluation initiale
+                - generic [ref=f5e144]: Terminée
+              - button "2 Traitement prescrit Échec" [ref=f5e147] [cursor=pointer]:
+                - generic [ref=f5e151]: "2"
+                - strong [ref=f5e152]: Traitement prescrit
+                - generic [ref=f5e153]: Échec
+              - button "3 Bilan de suivi À venir" [ref=f5e156] [cursor=pointer]:
+                - generic [ref=f5e160]: "3"
+                - strong [ref=f5e161]: Bilan de suivi
+                - generic [ref=f5e162]: À venir
+            - generic [ref=f5e163]:
+              - generic [ref=f5e164]:
+                - strong [ref=f5e165]: Étape 1 — Évaluation initiale
+                - generic [ref=f5e166]: Terminée
+              - paragraph [ref=f5e167]: Consultation et collecte des symptômes.
+              - generic [ref=f5e168]:
+                - strong [ref=f5e169]: "Consultation: Consultation initiale"
+                - paragraph [ref=f5e170]: Le patient décrit une amélioration progressive.
+                - generic [ref=f5e171]: "Résultat : Poursuite du suivi recommandée."
+            - generic [ref=f5e172]:
+              - strong [ref=f5e173]: Ajouter une note ou un résultat
+              - combobox [ref=f5e174]:
+                - option "Note" [selected]
+                - option "Résultat"
+              - combobox [ref=f5e175]:
+                - option "Phase (optionnel)" [selected]
+                - option "1. Évaluation initiale"
+                - option "2. Traitement prescrit"
+                - option "3. Bilan de suivi"
+              - textbox "Titre" [ref=f5e176]
+              - textbox "Description" [ref=f5e177]
+              - textbox "Résultat (optionnel)" [ref=f5e178]
+              - button "Ajouter" [ref=f5e179] [cursor=pointer]
+      - dialog "Détails d’intégrité" [ref=f5e180]:
+        - generic [ref=f5e181]:
+          - generic [ref=f5e182]:
+            - heading "Détails d’intégrité" [level=2] [ref=f5e183]
+            - paragraph [ref=f5e184]: Les données médicales restent chiffrées.
+          - button "Fermer" [ref=f5e185] [cursor=pointer]
+        - generic [ref=f5e189]:
+          - generic [ref=f5e190]:
+            - strong [ref=f5e191]: Patient chain
+            - generic [ref=f5e192]: 2 blocs
+          - generic [ref=f5e193]:
+            - term [ref=f5e194]: Bloc actuel
+            - definition [ref=f5e195]: "#1"
+            - term [ref=f5e196]: Hash du bloc
+            - definition [ref=f5e197]: 002f4bb4c108…42998279
+            - term [ref=f5e198]: Bloc précédent
+            - definition [ref=f5e199]: 008077118c1a…cdc93d38
+            - term [ref=f5e200]: Racine Merkle
+            - definition [ref=f5e201]: 01824260cdfc…16d0e839
+            - term [ref=f5e202]: Nonce
+            - definition [ref=f5e203]: "78"
+            - term [ref=f5e204]: Ancrage
+            - definition [ref=f5e205]: "Bloc #1"
+            - term [ref=f5e206]: Transaction
+            - definition [ref=f5e207]: 0x0f915611c3…d033644d
+        - generic [ref=f5e208]:
+          - generic [ref=f5e209]:
+            - strong [ref=f5e210]: Doctor chain
+            - generic [ref=f5e211]: 3 blocs
+          - generic [ref=f5e212]:
+            - term [ref=f5e213]: Bloc actuel
+            - definition [ref=f5e214]: "#2"
+            - term [ref=f5e215]: Hash du bloc
+            - definition [ref=f5e216]: 00c68a9ba990…bc93738c
+            - term [ref=f5e217]: Bloc précédent
+            - definition [ref=f5e218]: 00679a601596…c89217bf
+            - term [ref=f5e219]: Racine Merkle
+            - definition [ref=f5e220]: 971e7d17c2b5…371295bb
+            - term [ref=f5e221]: Nonce
+            - definition [ref=f5e222]: "351"
+            - term [ref=f5e223]: Ancrage
+            - definition [ref=f5e224]: "Bloc #2"
+            - term [ref=f5e225]: Transaction
+            - definition [ref=f5e226]: 0x30afbb8aea…8aafda84

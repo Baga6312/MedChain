@@ -1,0 +1,96 @@
+- generic [ref=f15e28]:
+  - complementary [ref=f15e29]:
+    - generic [ref=f15e36]:
+      - strong [ref=f15e37]: MedChain
+      - generic [ref=f15e38]: Health Ledger
+    - navigation [ref=f15e39]:
+      - text: PLATEFORME CLINIQUE
+      - button "Mon espace" [ref=f15e40] [cursor=pointer]
+      - button "Patients" [ref=f15e45] [cursor=pointer]
+      - button "Rendez-vous" [ref=f15e50] [cursor=pointer]
+      - button "Dossiers médicaux" [ref=f15e54] [cursor=pointer]
+    - button "Déconnexion" [ref=f15e60] [cursor=pointer]
+  - main [ref=f15e62]:
+    - generic [ref=f15e63]:
+      - generic [ref=f15e64]:
+        - generic [ref=f15e65]: MedChain
+        - strong [ref=f15e68]: Console clinique
+      - generic [ref=f15e69]:
+        - generic [ref=f15e70]: Réseau sécurisé
+        - button "Activer le mode sombre" [ref=f15e72] [cursor=pointer]
+        - button "Notifications" [ref=f15e75] [cursor=pointer]:
+          - generic [ref=f15e79]: "2"
+        - button "Ouvrir les paramètres du compte" [ref=f15e80] [cursor=pointer]:
+          - generic [ref=f15e81]: D
+          - generic [ref=f15e82]:
+            - strong [ref=f15e83]: Demo
+            - generic [ref=f15e84]: Praticien vérifié
+    - generic [ref=f15e85]:
+      - generic [ref=f15e87]:
+        - text: Espace médecin
+        - heading "Bonjour Demo" [level=1] [ref=f15e88]
+        - paragraph [ref=f15e89]: Vos informations personnelles et vos traitements associés.
+      - generic [ref=f15e90]:
+        - generic [ref=f15e92]:
+          - heading "Mes patients" [level=2] [ref=f15e93]
+          - paragraph [ref=f15e94]: Historique des prises en charge.
+        - generic [ref=f15e96]:
+          - generic [ref=f15e97]:
+            - generic [ref=f15e101]:
+              - strong [ref=f15e102]: Patient 1
+              - generic [ref=f15e103]: Suivi de démonstration · En cours
+            - generic [ref=f15e104]:
+              - button "Terminer" [ref=f15e105] [cursor=pointer]
+              - button "Timeline" [active] [ref=f15e106] [cursor=pointer]
+          - generic [ref=f15e111]:
+            - generic [ref=f15e112]:
+              - generic [ref=f15e117]:
+                - strong [ref=f15e118]: Enregistrement vérifié
+                - generic [ref=f15e119]: Les blocs et les ancrages blockchain correspondent.
+              - button "Détails" [ref=f15e120] [cursor=pointer]
+            - generic "Progression du traitement" [ref=f15e124]:
+              - button "1 Évaluation initiale Terminée" [ref=f15e126] [cursor=pointer]:
+                - generic [ref=f15e131]: "1"
+                - strong [ref=f15e132]: Évaluation initiale
+                - generic [ref=f15e133]: Terminée
+              - button "2 Traitement prescrit Échec" [ref=f15e136] [cursor=pointer]:
+                - generic [ref=f15e140]: "2"
+                - strong [ref=f15e141]: Traitement prescrit
+                - generic [ref=f15e142]: Échec
+              - button "3 Bilan de suivi À venir" [ref=f15e145] [cursor=pointer]:
+                - generic [ref=f15e149]: "3"
+                - strong [ref=f15e150]: Bilan de suivi
+                - generic [ref=f15e151]: À venir
+            - generic [ref=f15e152]:
+              - generic [ref=f15e153]:
+                - strong [ref=f15e154]: Étape 1 — Évaluation initiale
+                - generic [ref=f15e155]: Terminée
+              - paragraph [ref=f15e156]: Consultation et collecte des symptômes.
+              - generic [ref=f15e157]:
+                - strong [ref=f15e158]: "Consultation: Consultation initiale"
+                - paragraph [ref=f15e159]: Le patient décrit une amélioration progressive.
+                - generic [ref=f15e160]: "Résultat : Poursuite du suivi recommandée."
+            - generic [ref=f15e161]:
+              - strong [ref=f15e162]: Ajouter une phase
+              - textbox "Nom de la phase" [ref=f15e163]
+              - textbox "Résumé" [ref=f15e164]
+              - button "Ajouter" [ref=f15e165] [cursor=pointer]
+            - generic [ref=f15e166]:
+              - strong [ref=f15e167]: Ajouter un événement clinique
+              - combobox [ref=f15e168]:
+                - option "Consultation"
+                - option "Diagnostic"
+                - option "Prescription"
+                - option "Examen"
+                - option "Résultat"
+                - option "Suivi"
+                - option "Note" [selected]
+              - combobox [ref=f15e169]:
+                - option "Phase (optionnel)" [selected]
+                - option "1. Évaluation initiale"
+                - option "2. Traitement prescrit"
+                - option "3. Bilan de suivi"
+              - textbox "Titre" [ref=f15e170]
+              - textbox "Description" [ref=f15e171]
+              - textbox "Résultat (optionnel)" [ref=f15e172]
+              - button "Ajouter" [ref=f15e173] [cursor=pointer]

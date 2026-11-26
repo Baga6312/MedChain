@@ -1,0 +1,43 @@
+- generic [ref=f35e28]:
+  - complementary [ref=f35e29]:
+    - generic [ref=f35e36]:
+      - strong [ref=f35e37]: MedChain
+      - generic [ref=f35e38]: Health Ledger
+    - navigation [ref=f35e39]:
+      - text: PLATEFORME CLINIQUE
+      - button "Mon espace" [ref=f35e40] [cursor=pointer]
+      - button "Patients" [ref=f35e45] [cursor=pointer]
+      - button "Rendez-vous" [ref=f35e50] [cursor=pointer]
+      - button "Dossiers médicaux" [ref=f35e54] [cursor=pointer]
+    - button "Déconnexion" [ref=f35e60] [cursor=pointer]
+  - main [ref=f35e62]:
+    - generic [ref=f35e63]:
+      - generic [ref=f35e64]:
+        - generic [ref=f35e65]: MedChain
+        - strong [ref=f35e68]: Console clinique
+      - generic [ref=f35e69]:
+        - generic [ref=f35e70]: Réseau sécurisé
+        - button "Activer le mode sombre" [ref=f35e72] [cursor=pointer]
+        - button "Notifications" [ref=f35e75] [cursor=pointer]:
+          - generic [ref=f35e79]: "2"
+        - button "Ouvrir les paramètres du compte" [ref=f35e80] [cursor=pointer]:
+          - generic [ref=f35e81]: D
+          - generic [ref=f35e82]:
+            - strong [ref=f35e83]: Demo
+            - generic [ref=f35e84]: Praticien vérifié
+    - generic [ref=f35e85]:
+      - generic [ref=f35e87]:
+        - text: Espace médecin
+        - heading "Bonjour Demo" [level=1] [ref=f35e88]
+        - paragraph [ref=f35e89]: Vos informations personnelles et vos traitements associés.
+      - generic [ref=f35e90]:
+        - generic [ref=f35e92]:
+          - heading "Mes patients" [level=2] [ref=f35e93]
+          - paragraph [ref=f35e94]: Historique des prises en charge.
+        - generic [ref=f35e97]:
+          - generic [ref=f35e101]:
+            - strong [ref=f35e102]: Patient 1
+            - generic [ref=f35e103]: Suivi de démonstration · En cours
+          - generic [ref=f35e104]:
+            - button "Terminer" [ref=f35e105] [cursor=pointer]
+            - button "Timeline" [ref=f35e106] [cursor=pointer]

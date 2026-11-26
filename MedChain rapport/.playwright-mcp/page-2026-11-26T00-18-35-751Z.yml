@@ -1,0 +1,98 @@
+- generic [ref=f30e28]:
+  - complementary [ref=f30e29]:
+    - generic [ref=f30e36]:
+      - strong [ref=f30e37]: MedChain
+      - generic [ref=f30e38]: Health Ledger
+    - navigation [ref=f30e39]:
+      - text: PLATEFORME CLINIQUE
+      - button "Mon espace" [ref=f30e40] [cursor=pointer]
+      - button "Médecins" [ref=f30e45] [cursor=pointer]
+      - button "Rendez-vous" [ref=f30e51] [cursor=pointer]
+      - button "Dossiers médicaux" [ref=f30e55] [cursor=pointer]
+    - button "Déconnexion" [ref=f30e61] [cursor=pointer]
+  - main [ref=f30e63]:
+    - generic [ref=f30e64]:
+      - generic [ref=f30e65]:
+        - generic [ref=f30e66]: MedChain
+        - strong [ref=f30e69]: Console clinique
+      - generic [ref=f30e70]:
+        - generic [ref=f30e71]: Réseau sécurisé
+        - button "Activer le mode sombre" [ref=f30e73] [cursor=pointer]
+        - button "Notifications" [ref=f30e76] [cursor=pointer]:
+          - generic [ref=f30e80]: "2"
+        - button "Ouvrir les paramètres du compte" [ref=f30e81] [cursor=pointer]:
+          - generic [ref=f30e82]: D
+          - generic [ref=f30e83]:
+            - strong [ref=f30e84]: Demo
+            - generic [ref=f30e85]: Espace patient
+    - generic [ref=f30e86]:
+      - generic [ref=f30e88]:
+        - text: Espace patient
+        - heading "Bonjour Demo" [level=1] [ref=f30e89]
+        - paragraph [ref=f30e90]: Vos informations personnelles et vos traitements associés.
+      - generic [ref=f30e91]:
+        - generic [ref=f30e93]:
+          - heading "Demander un traitement" [level=2] [ref=f30e94]
+          - paragraph [ref=f30e95]: Un médecin devra activer la prise en charge.
+        - generic [ref=f30e96]:
+          - combobox [ref=f30e97]:
+            - option "Choisir un médecin" [selected]
+            - option "Doctor 2 — Neurology"
+            - option "Doctor 3 — Pediatrics"
+            - option "Doctor 1 — Cardiology"
+          - textbox "Motif" [ref=f30e98]
+          - button "Envoyer la demande" [ref=f30e99] [cursor=pointer]
+      - generic [ref=f30e100]:
+        - generic [ref=f30e102]:
+          - heading "Mes traitements" [level=2] [ref=f30e103]
+          - paragraph [ref=f30e104]: Historique des prises en charge.
+        - generic [ref=f30e106]:
+          - generic [ref=f30e107]:
+            - generic [ref=f30e111]:
+              - strong [ref=f30e112]: Doctor 1
+              - generic [ref=f30e113]: Suivi de démonstration · En cours
+            - generic [ref=f30e114]:
+              - button "Abandonner" [ref=f30e115] [cursor=pointer]
+              - button "Timeline" [active] [ref=f30e116] [cursor=pointer]
+          - generic [ref=f30e121]:
+            - generic [ref=f30e122]:
+              - generic [ref=f30e127]:
+                - strong [ref=f30e128]: Enregistrement vérifié
+                - generic [ref=f30e129]: Les blocs et les ancrages blockchain correspondent.
+              - button "Détails" [ref=f30e130] [cursor=pointer]
+            - generic "Progression du traitement" [ref=f30e134]:
+              - button "1 Évaluation initiale Terminée" [ref=f30e136] [cursor=pointer]:
+                - generic [ref=f30e141]: "1"
+                - strong [ref=f30e142]: Évaluation initiale
+                - generic [ref=f30e143]: Terminée
+              - button "2 Traitement prescrit Échec" [ref=f30e146] [cursor=pointer]:
+                - generic [ref=f30e150]: "2"
+                - strong [ref=f30e151]: Traitement prescrit
+                - generic [ref=f30e152]: Échec
+              - button "3 Bilan de suivi À venir" [ref=f30e155] [cursor=pointer]:
+                - generic [ref=f30e159]: "3"
+                - strong [ref=f30e160]: Bilan de suivi
+                - generic [ref=f30e161]: À venir
+            - generic [ref=f30e162]:
+              - generic [ref=f30e163]:
+                - strong [ref=f30e164]: Étape 1 — Évaluation initiale
+                - generic [ref=f30e165]: Terminée
+              - paragraph [ref=f30e166]: Consultation et collecte des symptômes.
+              - generic [ref=f30e167]:
+                - strong [ref=f30e168]: "Consultation: Consultation initiale"
+                - paragraph [ref=f30e169]: Le patient décrit une amélioration progressive.
+                - generic [ref=f30e170]: "Résultat : Poursuite du suivi recommandée."
+            - generic [ref=f30e171]:
+              - strong [ref=f30e172]: Ajouter une note ou un résultat
+              - combobox [ref=f30e173]:
+                - option "Note" [selected]
+                - option "Résultat"
+              - combobox [ref=f30e174]:
+                - option "Phase (optionnel)" [selected]
+                - option "1. Évaluation initiale"
+                - option "2. Traitement prescrit"
+                - option "3. Bilan de suivi"
+              - textbox "Titre" [ref=f30e175]
+              - textbox "Description" [ref=f30e176]
+              - textbox "Résultat (optionnel)" [ref=f30e177]
+              - button "Ajouter" [ref=f30e178] [cursor=pointer]

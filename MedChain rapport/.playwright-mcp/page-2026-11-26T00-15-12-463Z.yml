@@ -1,0 +1,56 @@
+- generic [ref=f14e7]:
+  - complementary [ref=f14e8]:
+    - generic [ref=f14e15]:
+      - strong [ref=f14e16]: MedChain
+      - generic [ref=f14e17]: Health Ledger
+    - navigation [ref=f14e18]:
+      - text: PLATEFORME CLINIQUE
+      - button "Mon espace" [ref=f14e19] [cursor=pointer]
+      - button "Médecins" [ref=f14e24] [cursor=pointer]
+      - button "Rendez-vous" [ref=f14e30] [cursor=pointer]
+      - button "Dossiers médicaux" [ref=f14e34] [cursor=pointer]
+    - button "Déconnexion" [ref=f14e40] [cursor=pointer]
+  - main [ref=f14e42]:
+    - generic [ref=f14e43]:
+      - generic [ref=f14e44]:
+        - generic [ref=f14e45]: MedChain
+        - strong [ref=f14e48]: Console clinique
+      - generic [ref=f14e49]:
+        - generic [ref=f14e50]: Réseau sécurisé
+        - button "Activer le mode sombre" [ref=f14e52] [cursor=pointer]
+        - button "Notifications" [ref=f14e55] [cursor=pointer]:
+          - generic [ref=f14e59]: "2"
+        - button "Ouvrir les paramètres du compte" [ref=f14e60] [cursor=pointer]:
+          - generic [ref=f14e61]: D
+          - generic [ref=f14e62]:
+            - strong [ref=f14e63]: Demo
+            - generic [ref=f14e64]: Espace patient
+    - generic [ref=f14e65]:
+      - generic [ref=f14e66]:
+        - generic [ref=f14e67]:
+          - text: Gestion
+          - heading "Rendez-vous" [level=1] [ref=f14e68]
+          - paragraph [ref=f14e69]: 1 enregistrement(s)
+        - button "Ajouter" [ref=f14e70] [cursor=pointer]
+      - table [ref=f14e74]:
+        - rowgroup [ref=f14e75]:
+          - row [ref=f14e76]:
+            - columnheader "ID" [ref=f14e77]
+            - columnheader "Patient" [ref=f14e78]
+            - columnheader "Médecin" [ref=f14e79]
+            - columnheader "Date" [ref=f14e80]
+            - columnheader "Notes" [ref=f14e81]
+            - columnheader "Statut" [ref=f14e82]
+            - columnheader [ref=f14e83]
+        - rowgroup [ref=f14e84]:
+          - row [ref=f14e87] [cursor=pointer]:
+            - cell "1" [ref=f14e88]
+            - cell "Patient 1" [ref=f14e89]
+            - cell "Doctor 1" [ref=f14e90]
+            - cell "2026-11-27T00:11:40.401551Z" [ref=f14e91]
+            - cell "Seeded appointment" [ref=f14e92]
+            - cell "pending" [ref=f14e93]
+            - cell [ref=f14e94]:
+              - generic [ref=f14e95]:
+                - button "Modifier" [ref=f14e96]
+                - button "Supprimer" [ref=f14e97]

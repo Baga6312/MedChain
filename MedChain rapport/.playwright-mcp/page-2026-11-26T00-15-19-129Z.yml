@@ -1,0 +1,12 @@
+- generic [ref=f14e119]:
+  - button "Activer le mode sombre" [ref=f14e120] [cursor=pointer]
+  - generic [ref=f14e123]:
+    - heading "MedChain" [level=1] [ref=f14e129]
+    - textbox "Email" [ref=f14e131]
+    - textbox "Mot de passe" [ref=f14e133]
+    - button "Se connecter" [ref=f14e134] [cursor=pointer]
+    - button "Continuer avec Google" [ref=f14e135] [cursor=pointer]
+    - paragraph [ref=f14e142]:
+      - text: Pas de compte ?
+      - link "Créer un compte" [ref=f14e143] [cursor=pointer]:
+        - /url: /register
